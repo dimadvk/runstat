@@ -1,7 +1,6 @@
 """Some tools used for getting data from Facebook."""
 # -*- coding: utf-8 -*-
 import os
-import sqlite3
 import json
 import facebook
 import requests
@@ -26,9 +25,7 @@ with open(SECRETS_FILE) as f:
 def get_db(secrets=SECRETS):
     """Make a connection to database, return connection and cursor objects."""
     db = secrets['DATABASES']['default']
-    if db['ENGINE'] == u'django.db.backends.sqlite3':
-        connection = sqlite3.connect(db['NAME'])
-    elif db['ENGINE'] == u'django.db.backends.mysql':
+    if db['ENGINE'] == u'django.db.backends.mysql':
         connection = MySQLdb.connect(
             host=db['HOST'],
             user=db['USER'],
@@ -65,16 +62,17 @@ def get_access_token(graph_obj):
 def get_group_members(graph_obj, group_id):
     """Return a list of group members."""
     members_page = graph_obj.get_connections(
-        id=group_id, connection_name='members')
+        id=group_id, connection_name='members', **{'limit': '100'})
     members_list = members_page.get('data', [])
-    # while True:
-    #     if ('paging' in members_page.keys() and
-    #             'next' in members_page['paging'].keys()):
-    #             url_next_page = members_page['paging'].get('next')
-    #     else:
-    #         break
-    #     members_page = requests.get(url_next_page).json()
-    #     members_list.extend(members_page.get('data', []))
+    while True:
+        if ('paging' in members_page.keys() and
+                'next' in members_page['paging'].keys()):
+                url_next_page = members_page['paging'].get('next')
+        else:
+            break
+        members_page = requests.get(url_next_page).json()
+        members_list.extend(members_page.get('data', []))
+        print url_next_page
 
     return members_list
 
