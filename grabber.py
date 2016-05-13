@@ -34,6 +34,7 @@ def get_db(secrets=SECRETS):
             user=db['USER'],
             passwd=db['PASSWORD'],
             db=db['NAME'],
+            charset='utf8'
         )
     return connection, connection.cursor()
 
@@ -66,14 +67,14 @@ def get_group_members(graph_obj, group_id):
     members_page = graph_obj.get_connections(
         id=group_id, connection_name='members')
     members_list = members_page.get('data', [])
-    while True:
-        if ('paging' in members_page.keys() and
-                'next' in members_page['paging'].keys()):
-                url_next_page = members_page['paging'].get('next')
-        else:
-            break
-        members_page = requests.get(url_next_page).json()
-        members_list.extend(members_page.get('data', []))
+    # while True:
+    #     if ('paging' in members_page.keys() and
+    #             'next' in members_page['paging'].keys()):
+    #             url_next_page = members_page['paging'].get('next')
+    #     else:
+    #         break
+    #     members_page = requests.get(url_next_page).json()
+    #     members_list.extend(members_page.get('data', []))
 
     return members_list
 
@@ -143,7 +144,7 @@ if __name__ == '__main__':
     members = get_group_members(graph, GROUP_ID)
     for member in members:
         db_cursor.execute(
-            """insert or replace into runstat_groupmember
+            """insert into runstat_groupmember
                     (object_id, name, administrator)
                         values (%s, %s, %s)""",
             (member['id'],
