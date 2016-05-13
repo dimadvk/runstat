@@ -27,7 +27,7 @@ class GroupPost(models.Model):
         verbose_name='post object id',
         unique=True,
         blank=False,
-        max_length=256,
+        max_length=100
     )
     author = models.ForeignKey(
         'GroupMember',
