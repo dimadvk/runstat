@@ -18,6 +18,10 @@ class GroupMember(models.Model):
         max_length=256,
     )
     administrator = models.BooleanField()
+    photo = models.URLField(
+        max_length=1000,
+        default=''
+    )
 
 
 class GroupPost(models.Model):
@@ -50,7 +54,7 @@ class GroupPost(models.Model):
         verbose_name='post created time',
         null=False,
     )
-        #TODO add 'has_attachment' BooleanField
+    # TODO add 'has_attachment' BooleanField
 
 
 class PostPhoto(models.Model):
