@@ -17,20 +17,10 @@ GROUP_ID = '1745974432290684'
 TOKEN_VALIDATION_URL = 'https://graph.facebook.com/oauth/access_token_info'
 BASE_DIR = os.path.dirname(__file__)
 TOKEN_FILE = os.path.join(BASE_DIR, '.fb_token')
-# DATABASE_ENGINE = 'sqlite3'
-# DATABASE_ENGINE = 'mysql'
-# SQLITE_DATABASE = os.path.join(BASE_DIR, 'run.sqlite3')
-# MYSQL_SERVER = {
-#     'host': 'localhost',
-#     'port': '3306',
-#     'database': 'runstat',
-#     'user': 'runstat',
-#     'password': 'runstat'
-# }
-# end const ##
 SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
 with open(SECRETS_FILE) as f:
     SECRETS = json.loads(f.read())
+# end const ##
 
 
 def get_db(secrets=SECRETS):
@@ -155,7 +145,7 @@ if __name__ == '__main__':
         db_cursor.execute(
             """insert or replace into runstat_groupmember
                     (object_id, name, administrator)
-                        values (?, ?, ?)""",
+                        values (%s, %s, %s)""",
             (member['id'],
              member['name'],
              member['administrator']))
@@ -167,7 +157,7 @@ if __name__ == '__main__':
     #     db_cursor.execute(
     #         """insert or replace into runstat_grouppost
     #                 (object_id, author_id, created_time, message)
-    #                     values (?, ?, ?, ?)""",
+    #                     values (%s, %s, %s, %s)""",
     #         (post['object_id'],
     #          post['author'],
     #          post['created_time'],
