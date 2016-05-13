@@ -72,7 +72,6 @@ def get_group_members(graph_obj, group_id):
             break
         members_page = requests.get(url_next_page).json()
         members_list.extend(members_page.get('data', []))
-        print url_next_page
 
     return members_list
 
