@@ -1,9 +1,11 @@
+"""Models for runstat."""
 from __future__ import unicode_literals
 
 from django.db import models
 
 
 class GroupMember(models.Model):
+    """Model for group member."""
 
     object_id = models.BigIntegerField(
         verbose_name='member object id',
@@ -19,13 +21,14 @@ class GroupMember(models.Model):
 
 
 class GroupPost(models.Model):
+    """Model for post in group feed."""
 
-    object_id = models.BigIntegerField(
+    object_id = models.CharField(
         verbose_name='post object id',
         unique=True,
         blank=False,
+        max_length=256,
     )
-
     author = models.ForeignKey(
         'GroupMember',
         verbose_name='post author',
@@ -40,15 +43,29 @@ class GroupPost(models.Model):
     tags = models.CharField(
         verbose_name='tags in post',
         max_length=4096,
-        blank=True,
+        default='',
+        null=True,
     )
+    created_time = models.DateTimeField(
+        verbose_name='post created time',
+        null=False,
+    )
+        #TODO add 'has_attachment' BooleanField
+
 
 class PostPhoto(models.Model):
+    """Model for post photos."""
 
     object_id = models.BigIntegerField(
         verbose_name='post object id',
         unique=True,
         blank=False,
+    )
+    post_id = models.ForeignKey(
+        'GroupPost',
+        null=False,
+        verbose_name='post',
+        on_delete=models.CASCADE,
     )
     url_native = models.URLField(
         max_length=1000

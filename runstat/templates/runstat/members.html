@@ -1,0 +1,29 @@
+{% extends "runstat/base.html" %}
+
+{% block meta_title %}Group Members{% endblock meta_title %}
+
+{% block title %}Group Members{% endblock title %}
+
+{% block content %}
+
+<table class="table table-striped table-hover">
+  <thead>
+      <tr>
+          <th>#</th>
+          <th>Photo</th>
+          <th>Name</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for member in members %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td><img src="#" alt="User"></td>
+            <td>{{member.name}}</td>
+        </tr>
+      {% endfor %}
+  </tbody>
+
+</table>
+<img src="https://www.facebook.com/photo.php?fbid=868478539965701&set=gm.1749611645260296&type=3">
+{% endblock %}

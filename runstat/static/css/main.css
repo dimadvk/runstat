@@ -1,0 +1,41 @@
+/* Global Styles */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+.alert {
+	/* Ми додали відстань лише зверху елемента: -top */
+	margin-top: 10px;
+}
+
+.footer {
+	/* pадаємо верхню межу елемента: ширина лінії, тип лінії,
+	 * колір лінії */
+	border-top: 1px solid #dddddd;
+	/*задаємо внутрішю відстанб елемента до верхньго краю */
+	padding-top: 10px;
+    text-align: center;
+}
+html,
+body{
+    height: 100%;
+}
+
+.dl-horizontal .action-entry-name{
+    width: 360px;
+}
+.dl-horizontal .action-entry-detail{
+    margin-left: 380px;
+}
+.action-entry{
+    margin-top:4px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.wrap{
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
