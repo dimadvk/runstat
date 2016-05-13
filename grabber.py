@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 import sqlite3
+import json
 import facebook
 import requests
 import dateutil.parser
+import MySQLdb
 
 
 # constants
@@ -15,24 +17,35 @@ GROUP_ID = '1745974432290684'
 TOKEN_VALIDATION_URL = 'https://graph.facebook.com/oauth/access_token_info'
 BASE_DIR = os.path.dirname(__file__)
 TOKEN_FILE = os.path.join(BASE_DIR, '.fb_token')
-DATABASE = os.path.join(BASE_DIR, 'run.sqlite3')
+# DATABASE_ENGINE = 'sqlite3'
+# DATABASE_ENGINE = 'mysql'
+# SQLITE_DATABASE = os.path.join(BASE_DIR, 'run.sqlite3')
+# MYSQL_SERVER = {
+#     'host': 'localhost',
+#     'port': '3306',
+#     'database': 'runstat',
+#     'user': 'runstat',
+#     'password': 'runstat'
+# }
 # end const ##
+SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
+with open(SECRETS_FILE) as f:
+    SECRETS = json.loads(f.read())
 
 
-def execute_sql(database, statement, args=()):
-    """
-    Execute SQL-statement, return result.
-
-    Next format of oraguments is required:
-      'statement' - sql-statement as a string, 'args' - tuple.
-    """
-    with sqlite3.connect(database) as connection:
-        curs = connection.cursor()
-        # Foreign key constraints are disabled by default,
-        # so must be enabled separately for each database connection
-        curs.execute('PRAGMA FOREIGN_KEYS=ON')
-        curs.execute(statement, args)
-    return curs.fetchall()
+def get_db(secrets=SECRETS):
+    """Make a connection to database, return connection and cursor objects."""
+    db = secrets['DATABASES']['default']
+    if db['ENGINE'] == u'django.db.backends.sqlite3':
+        connection = sqlite3.connect(db['NAME'])
+    elif db['ENGINE'] == u'django.db.backends.mysql':
+        connection = MySQLdb.connect(
+            host=db['HOST'],
+            user=db['USER'],
+            passwd=db['PASSWORD'],
+            db=db['NAME'],
+        )
+    return connection, connection.cursor()
 
 
 def get_access_token(graph_obj):
@@ -65,7 +78,7 @@ def get_group_members(graph_obj, group_id):
     members_list = members_page.get('data', [])
     while True:
         if ('paging' in members_page.keys() and
-            'next' in members_page['paging'].keys()):
+                'next' in members_page['paging'].keys()):
                 url_next_page = members_page['paging'].get('next')
         else:
             break
@@ -101,7 +114,7 @@ def get_group_posts(graph_obj, group_id):
     posts_list = posts_page.get('data', [])
     while True:
         if ('paging' in posts_page.keys() and
-            'next' in posts_page['paging'].keys()):
+                'next' in posts_page['paging'].keys()):
                 url_next_page = posts_page['paging'].get('next')
         else:
             break
@@ -128,11 +141,7 @@ def get_post_photos(graph_obj, group_id):
 
 if __name__ == '__main__':
     # database
-    if not os.path.isfile(DATABASE):
-        print "ERROR: database not found"
-        exit()
-    db_connection = sqlite3.connect(DATABASE)
-    db_cursor = db_connection.cursor()
+    db_conn, db_cursor = get_db()
 
     # create GraphAPI instance
     graph = facebook.GraphAPI(version='2.5')
@@ -141,30 +150,32 @@ if __name__ == '__main__':
     # Do the deal
 
     # grab group members
-    # members = get_group_members(graph, GROUP_ID)
-    # for member in members:
-    #     db_cursor.execute('insert or replace into runstat_groupmember \
-    #                       (object_id, name, administrator) \
-    #                       values (?, ?, ?)',
-    #                       (member['id'],
-    #                        member['name'],
-    #                        member['administrator']))
-    # db_connection.commit()
+    members = get_group_members(graph, GROUP_ID)
+    for member in members:
+        db_cursor.execute(
+            """insert or replace into runstat_groupmember
+                    (object_id, name, administrator)
+                        values (?, ?, ?)""",
+            (member['id'],
+             member['name'],
+             member['administrator']))
+    db_conn.commit()
 
     # grab group posts
-    posts = get_group_posts(graph, GROUP_ID)
-    for post in posts:
-        db_cursor.execute('insert or replace into runstat_grouppost \
-                          (object_id, author_id, created_time, message) \
-                          values (?, ?, ?, ?)',
-                          (post['object_id'],
-                           post['author'],
-                           post['created_time'],
-                           post['message']))
-    db_connection.commit()
+    # posts = get_group_posts(graph, GROUP_ID)
+    # for post in posts:
+    #     db_cursor.execute(
+    #         """insert or replace into runstat_grouppost
+    #                 (object_id, author_id, created_time, message)
+    #                     values (?, ?, ?, ?)""",
+    #         (post['object_id'],
+    #          post['author'],
+    #          post['created_time'],
+    #          post['message']))
+    # db_conn.commit()
 
     # grab post photos
     photos = get_post_photos(graph, GROUP_ID)
 
     # close database connection
-    db_connection.close()
+    db_conn.close()
