@@ -2,3 +2,4 @@
 .fb_token
 *.sqlite3
 secrets.json
+*.pyc
