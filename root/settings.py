@@ -15,20 +15,22 @@ import json
 
 from django.core.exceptions import ImproperlyConfigured
 
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # JSON-based secrets file
-with open('secrets.json') as f:
+SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
+with open(SECRETS_FILE) as f:
     SECRETS = json.loads(f.read())
 
 def get_secret(setting, secrets=SECRETS):
     """Get the secret variable or return exception."""
     try:
-        return secrets['setting']
+        return secrets[setting]
     except KeyError:
         error_msg = "Set the {0} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
