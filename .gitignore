@@ -1,3 +1,4 @@
 *.log
 db.py
 .fb_token
+*.sqlite3
