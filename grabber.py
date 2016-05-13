@@ -144,7 +144,7 @@ if __name__ == '__main__':
     members = get_group_members(graph, GROUP_ID)
     for member in members:
         db_cursor.execute(
-            """insert into runstat_groupmember
+            """replace into runstat_groupmember
                     (object_id, name, administrator)
                         values (%s, %s, %s)""",
             (member['id'],
