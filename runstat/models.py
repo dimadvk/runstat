@@ -11,6 +11,7 @@ class GroupMember(models.Model):
         verbose_name='member object id',
         unique=True,
         blank=False,
+        primary_key=True,
     )
     name = models.CharField(
         verbose_name='member name',
@@ -18,10 +19,6 @@ class GroupMember(models.Model):
         max_length=256,
     )
     administrator = models.BooleanField()
-    photo = models.URLField(
-        max_length=1000,
-        default=''
-    )
 
 
 class GroupPost(models.Model):
@@ -29,54 +26,43 @@ class GroupPost(models.Model):
 
     object_id = models.CharField(
         verbose_name='post object id',
-        unique=True,
         blank=False,
-        max_length=100
+        max_length=100,
+        unique=True,
     )
-    author = models.ForeignKey(
-        'GroupMember',
-        verbose_name='post author',
-        null=True,
-        on_delete=models.SET_NULL,
+    author = models.BigIntegerField(
+        verbose_name='author object id',
+        blank=False,
     )
     message = models.TextField(
         blank=True,
         null=True,
         verbose_name='post message',
     )
-    tags = models.CharField(
-        verbose_name='tags in post',
-        max_length=4096,
-        default='',
-        null=True,
-    )
     created_time = models.DateTimeField(
         verbose_name='post created time',
         null=False,
     )
-    # TODO add 'has_attachment' BooleanField
+    updated_time = models.DateTimeField(
+        verbose_name='post updated time',
+        null=True,
+    )
 
 
-class PostPhoto(models.Model):
-    """Model for post photos."""
+class PostAttachments(models.Model):
+    """Model for post attachments."""
 
-    object_id = models.BigIntegerField(
+    post = models.CharField(
         verbose_name='post object id',
-        unique=True,
         blank=False,
+        max_length=100,
+        unique=True,
     )
-    post_id = models.ForeignKey(
-        'GroupPost',
-        null=False,
-        verbose_name='post',
-        on_delete=models.CASCADE,
+    url = models.URLField(
+        max_length=1000,
+        default=''
     )
-    url_native = models.URLField(
-        max_length=1000
-    )
-    url_x600 = models.URLField(
-        max_length=1000
-    )
-    url_x480 = models.URLField(
-        max_length=1000
+    title = models.TextField(
+        blank=True,
+        default='',
     )

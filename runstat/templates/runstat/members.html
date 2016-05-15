@@ -17,12 +17,11 @@
   <tbody>
       {% for member in members %}
         <tr>
-    <td><img src="https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/11406895_10153457089428552_7046977239850441618_n.jpg?oh=956825b9ea6be6db6a2a0576c4db6284&oe=57E07B95" alt="Photo"></td>
+            <td><img src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture"
+                    alt="Photo" class="img-rounded"></td>
             <td>{{member.name}}</td>
         </tr>
       {% endfor %}
   </tbody>
-
 </table>
-<img src="https://www.facebook.com/photo.php?fbid=868478539965701&set=gm.1749611645260296&type=3">
 {% endblock %}

@@ -24,6 +24,7 @@ SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
 with open(SECRETS_FILE) as f:
     SECRETS = json.loads(f.read())
 
+
 def get_secret(setting, secrets=SECRETS):
     """Get the secret variable or return exception."""
     try:
@@ -92,12 +93,12 @@ WSGI_APPLICATION = 'root.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': os.path.join(BASE_DIR, 'run.sqlite3'),
 #    }
-#}
+# }
 DATABASES = get_secret('DATABASES')
 
 
@@ -140,4 +141,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # load other settings
-

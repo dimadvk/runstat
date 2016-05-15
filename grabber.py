@@ -6,19 +6,19 @@ import facebook
 import requests
 import dateutil.parser
 import MySQLdb
+from pytz import utc
 
 
 # constants
-APP_ID = '542329375940973'
-APP_SECRET = '36b075370d6f7e06ac4d225d3d2d3f6d'
-# 'Pobezhali' group id
-GROUP_ID = '1745974432290684'
 TOKEN_VALIDATION_URL = 'https://graph.facebook.com/oauth/access_token_info'
 BASE_DIR = os.path.dirname(__file__)
 TOKEN_FILE = os.path.join(BASE_DIR, '.fb_token')
 SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
 with open(SECRETS_FILE) as f:
     SECRETS = json.loads(f.read())
+APP_ID = SECRETS['FACEBOOK_APP']['APP_ID']
+APP_SECRET = SECRETS['FACEBOOK_APP']['APP_SECRET']
+GROUP_ID = SECRETS['FACEBOOK_GROUP_ID']
 # end const ##
 
 
@@ -96,7 +96,8 @@ def renew_group_members(graph_obj, group_id):
 
 def get_group_posts(graph_obj, group_id):
     """Get all posts from group feed."""
-    kwargs = {'fields': 'id,from,updated_time,message', 'limit': 100}
+    kwargs = {'fields': 'id,from,updated_time,created_time,message,attachments',
+              'limit': 200}
     posts_page = graph_obj.get_connections(
         id=group_id, connection_name='feed', **kwargs)
     posts_list = posts_page.get('data', [])
@@ -111,21 +112,48 @@ def get_group_posts(graph_obj, group_id):
 
     posts_pretty_list = []
     for post in posts_list:
+        # check attachment
+        attachments = get_attachments(post)
+        created_time = dateutil.parser.parse(post.get('created_time'))
+        created_time = created_time.astimezone(utc).replace(tzinfo=None)
+        updated_time = dateutil.parser.parse(post.get('updated_time'))
+        updated_time = updated_time.astimezone(utc).replace(tzinfo=None)
+        message = post.get('message', '')
+        message = message.encode('unicode_escape')
         posts_pretty_list.append({
             'object_id': post.get('id'),
             'author': post.get('from').get('id'),
-            'created_time': dateutil.parser.parse(post.get('updated_time')),
-            'message': post.get('message'),
+            'created_time': created_time,
+            'updated_time': updated_time,
+            'message': message,
+            'attachments': attachments
         })
     return posts_pretty_list
 
 
-def get_post_photos(graph_obj, group_id):
-    """Get attached photos of all posts in group feed."""
-    # get list of post_id from db
-    # for every post_id:
-    #   if no entry in db for this post id, then make a query
-    return []
+def get_attachments(post):
+    """Try to get subattachemnts from post."""
+    links = []
+    try:
+        for l in post['attachments']['data'][0]['subattachments']['data']:
+            links.append(l['media']['image']['src'])
+    except:
+        pass
+    if not links:
+        try:
+            links.append(
+                post['attachments']['data'][0]['media']['image']['src'])
+        except:
+            pass
+    title = ''
+    try:
+        title = post['attachments']['data'][0]['title'].encode('unicode_escape')
+    except:
+        pass
+    if 'attachments' in post.keys() and not links and not title:
+        title = 'Attachments exists, but undefined'
+    return {'links': links, 'title': title}
+
 
 if __name__ == '__main__':
     # database
@@ -150,20 +178,33 @@ if __name__ == '__main__':
     db_conn.commit()
 
     # grab group posts
-    # posts = get_group_posts(graph, GROUP_ID)
-    # for post in posts:
-    #     db_cursor.execute(
-    #         """insert or replace into runstat_grouppost
-    #                 (object_id, author_id, created_time, message)
-    #                     values (%s, %s, %s, %s)""",
-    #         (post['object_id'],
-    #          post['author'],
-    #          post['created_time'],
-    #          post['message']))
-    # db_conn.commit()
+    posts = get_group_posts(graph, GROUP_ID)
+    for post in posts:
+        # write posts
+        db_cursor.execute(
+            """replace into runstat_grouppost
+                  (object_id, author, created_time, updated_time, message)
+                        values (%s, %s, %s, %s, %s)""",
+            (post['object_id'],
+             post['author'],
+             post['created_time'],
+             post['updated_time'],
+             post['message']))
+    db_conn.commit()
+    # write attachments information
+    for post in posts:
+        for link in post['attachments']['links']:
+            db_cursor.execute(
+                """replace into runstat_postattachments
+                    (post, url, title) values (%s, %s, %s)""",
+                (post['object_id'],
+                 link,
+                 post['attachments']['title'])
+            )
+    db_conn.commit()
 
     # grab post photos
-    photos = get_post_photos(graph, GROUP_ID)
+    # photos = get_post_photos(graph, GROUP_ID)
 
     # close database connection
     db_conn.close()
