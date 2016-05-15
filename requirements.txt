@@ -31,6 +31,7 @@ pylama-pylint==2.2.1
 pylint==1.5.4
 pyOpenSSL==16.0.0
 python-dateutil==2.5.3
+pytz==2016.4
 requests==2.10.0
 simplegeneric==0.8.1
 six==1.10.0
