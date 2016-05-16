@@ -125,10 +125,10 @@ def renew_group_posts(graph_obj, group_id):
             order by updated_time desc limit 1"""
     )
     query_result = db_curs.fetchone()
-    # get unixtime-60seconds of last post
+    # get unixtime of last post
     if query_result:
         last_post_time = query_result[0]
-        since = str(int(last_post_time.strftime('%s')) - 60)
+        since = last_post_time.strftime('%s')
     else:
         since = '0'
     # make a query to facebook with 'since' parametr
@@ -168,6 +168,17 @@ def renew_group_posts(graph_obj, group_id):
     # write received posts to database
     # write posts
     for post in posts_pretty_list:
+        # write new post
+        db_curs.execute(
+            "select id from runstat_grouppost where object_id=%s",
+            (post['object_id'], )
+        )
+        post_id = db_curs.fetchone()
+        if post_id:
+            db_curs.execute(
+                "delete from runstat_postattachments where post_id=%s",
+                (post_id, )
+            )
         db_curs.execute(
             """replace into runstat_grouppost
                   (object_id, author, created_time, updated_time, message)
@@ -179,23 +190,20 @@ def renew_group_posts(graph_obj, group_id):
              post['message']))
         # and write attachments info to database
         links = post['attachments']['links']
-        # delete old attachments for post and write recently received info
-        db_curs.execute(
-            "delete from runstat_postattachments where post_id=%s",
-            (post['object_id'], )
-        )
+        # write ne attachments info
+        post_id = str(db_curs.lastrowid)
         if len(links) == 0:
             db_curs.execute(
                 """insert into runstat_postattachments (post_id, title)
                     values (%s, %s)""",
-                (post['object_id'], post['attachments']['title'])
+                (post_id, post['attachments']['title'])
             )
         else:
             for link in links:
                 db_curs.execute(
-                    """replace into runstat_postattachments
+                    """insert into runstat_postattachments
                         (post_id, url, title) values (%s, %s, %s)""",
-                    (post['object_id'],
+                    (post_id,
                      link,
                      post['attachments']['title'])
                 )
