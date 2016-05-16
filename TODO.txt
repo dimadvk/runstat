@@ -1,0 +1,6 @@
+- add page for showing group member including related posts
+	- get member
+	- get posts
+	- get attachments for every post
+	
+- add 'About' page

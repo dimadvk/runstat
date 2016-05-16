@@ -45,24 +45,25 @@ class GroupPost(models.Model):
     )
     updated_time = models.DateTimeField(
         verbose_name='post updated time',
-        null=True,
+        null=False,
     )
 
 
 class PostAttachments(models.Model):
     """Model for post attachments."""
 
-    post = models.CharField(
-        verbose_name='post object id',
+    post = models.ForeignKey(
+        'GroupPost',
+        to_field='object_id',
+        verbose_name='post id',
         blank=False,
-        max_length=100,
-        unique=True,
     )
     url = models.URLField(
         max_length=1000,
-        default=''
+        blank=True,
+        null=True,
     )
     title = models.TextField(
         blank=True,
-        default='',
+        null=True,
     )

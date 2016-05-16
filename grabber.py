@@ -177,17 +177,28 @@ def renew_group_posts(graph_obj, group_id):
              post['created_time'],
              post['updated_time'],
              post['message']))
-    db_conn.commit()
-    # write attachments information
-    for post in posts_pretty_list:
-        for link in post['attachments']['links']:
+        # and write attachments info to database
+        links = post['attachments']['links']
+        # delete old attachments for post and write recently received info
+        db_curs.execute(
+            "delete from runstat_postattachments where post_id=%s",
+            (post['object_id'], )
+        )
+        if len(links) == 0:
             db_curs.execute(
-                """replace into runstat_postattachments
-                    (post, url, title) values (%s, %s, %s)""",
-                (post['object_id'],
-                 link,
-                 post['attachments']['title'])
+                """insert into runstat_postattachments (post_id, title)
+                    values (%s, %s)""",
+                (post['object_id'], post['attachments']['title'])
             )
+        else:
+            for link in links:
+                db_curs.execute(
+                    """replace into runstat_postattachments
+                        (post_id, url, title) values (%s, %s, %s)""",
+                    (post['object_id'],
+                     link,
+                     post['attachments']['title'])
+                )
     db_conn.commit()
     db_conn.close()
 
