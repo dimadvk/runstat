@@ -79,25 +79,119 @@ def get_group_members(graph_obj, group_id):
 def renew_group_members(graph_obj, group_id):
     """Renew group members list in database."""
     # get group members from fb
+    members_fb = get_group_members(graph_obj, group_id)
+    members_fb_id = [m['id'] for m in members_fb]
 
     # get group members from db
+    db_conn, db_curs = get_db()
+    db_curs.execute('select object_id from runstat_groupmember')
+    members_db = db_curs.fetchall()
+    members_db_id = [str(m[0]) for m in members_db]
 
     # make the diff: some body can join group, somebody leave.
-    # Somebody could change name or became admin
+    # Ignore any changes in member's name or admin status
+    left_the_group = set(members_db_id) - set(members_fb_id)
+    join_the_group = set(members_fb_id) - set(members_db_id)
+    joined_members = []
+    for member in members_fb:
+        if member['id'] in join_the_group:
+            joined_members.append(member)
 
-    # write changes to db. May be make column object_id 'UNIQUE'
-    # or user 'INSERT OR REPLACE'
+    # write changes to db
+    for member in left_the_group:
+        db_curs.execute(
+            'delete from runstat_groupmember where object_id=%s',
+            (member, )
+        )
+    for member in joined_members:
+        db_curs.execute(
+            """insert into runstat_groupmember (object_id, name, administrator)
+                values (%s, %s, %s)""",
+            (member['id'],
+             member['name'],
+             member['administrator'])
+        )
+    db_conn.commit()
+    db_conn.close()
 
-    # to recognize who leave group:
-    # list(set(members_db) - set(members_fb))
 
-    return True
+def renew_group_posts(graph_obj, group_id):
+    """Add to database new posts from group newsfeed."""
+    # get database connection
+    db_conn, db_curs = get_db()
+    # get 'updated time' of last post in database
+    db_curs.execute(
+        """select updated_time from runstat_grouppost
+            order by updated_time desc limit 1"""
+    )
+    last_post_time = db_curs.fetchone()[0]
+    # get unixtime-60seconds of last post
+    since = str(int(last_post_time.strftime('%s')) - 60)
+    # make a query to facebook with 'since' parametr
+    fields = 'id,from,updated_time,created_time,message,attachments'
+    kwargs = {'fields': fields, 'limit': 200, 'since': since}
+    posts_page = graph_obj.get_connections(
+        id=group_id, connection_name='feed', **kwargs)
+    posts_list = posts_page.get('data', [])
+    while True:
+        if ('paging' in posts_page.keys() and
+                'next' in posts_page['paging'].keys()):
+                url_next_page = posts_page['paging'].get('next')
+        else:
+            break
+        posts_page = requests.get(url_next_page).json()
+        posts_list.extend(posts_page.get('data', []))
+
+    posts_pretty_list = []
+    for post in posts_list:
+        # check attachment
+        attachments = get_attachments(post)
+        created_time = dateutil.parser.parse(post.get('created_time'))
+        created_time = created_time.astimezone(utc).replace(tzinfo=None)
+        updated_time = dateutil.parser.parse(post.get('updated_time'))
+        updated_time = updated_time.astimezone(utc).replace(tzinfo=None)
+        message = post.get('message', '')
+        message = message.encode('unicode_escape')
+        posts_pretty_list.append({
+            'object_id': post.get('id'),
+            'author': post.get('from').get('id'),
+            'created_time': created_time,
+            'updated_time': updated_time,
+            'message': message,
+            'attachments': attachments
+        })
+
+    # write received posts to database
+    # write posts
+    for post in posts_pretty_list:
+        db_curs.execute(
+            """replace into runstat_grouppost
+                  (object_id, author, created_time, updated_time, message)
+                        values (%s, %s, %s, %s, %s)""",
+            (post['object_id'],
+             post['author'],
+             post['created_time'],
+             post['updated_time'],
+             post['message']))
+    db_conn.commit()
+    # write attachments information
+    for post in posts_pretty_list:
+        for link in post['attachments']['links']:
+            db_curs.execute(
+                """replace into runstat_postattachments
+                    (post, url, title) values (%s, %s, %s)""",
+                (post['object_id'],
+                 link,
+                 post['attachments']['title'])
+            )
+    db_conn.commit()
+    db_conn.close()
 
 
 def get_group_posts(graph_obj, group_id):
     """Get all posts from group feed."""
-    kwargs = {'fields': 'id,from,updated_time,created_time,message,attachments',
-              'limit': 200}
+    fields = 'id,from,updated_time,created_time,message,attachments'
+    kwargs = {'fields': fields, 'limit': 200}
     posts_page = graph_obj.get_connections(
         id=group_id, connection_name='feed', **kwargs)
     posts_list = posts_page.get('data', [])
@@ -156,9 +250,6 @@ def get_attachments(post):
 
 
 if __name__ == '__main__':
-    # database
-    db_conn, db_cursor = get_db()
-
     # create GraphAPI instance
     graph = facebook.GraphAPI(version='2.5')
     graph.access_token = get_access_token(graph)
@@ -166,45 +257,7 @@ if __name__ == '__main__':
     # Do the deal
 
     # grab group members
-    members = get_group_members(graph, GROUP_ID)
-    for member in members:
-        db_cursor.execute(
-            """replace into runstat_groupmember
-                    (object_id, name, administrator)
-                        values (%s, %s, %s)""",
-            (member['id'],
-             member['name'],
-             member['administrator']))
-    db_conn.commit()
+    renew_group_members(graph, GROUP_ID)
 
     # grab group posts
-    posts = get_group_posts(graph, GROUP_ID)
-    for post in posts:
-        # write posts
-        db_cursor.execute(
-            """replace into runstat_grouppost
-                  (object_id, author, created_time, updated_time, message)
-                        values (%s, %s, %s, %s, %s)""",
-            (post['object_id'],
-             post['author'],
-             post['created_time'],
-             post['updated_time'],
-             post['message']))
-    db_conn.commit()
-    # write attachments information
-    for post in posts:
-        for link in post['attachments']['links']:
-            db_cursor.execute(
-                """replace into runstat_postattachments
-                    (post, url, title) values (%s, %s, %s)""",
-                (post['object_id'],
-                 link,
-                 post['attachments']['title'])
-            )
-    db_conn.commit()
-
-    # grab post photos
-    # photos = get_post_photos(graph, GROUP_ID)
-
-    # close database connection
-    db_conn.close()
+    renew_group_posts(graph, GROUP_ID)
