@@ -124,9 +124,13 @@ def renew_group_posts(graph_obj, group_id):
         """select updated_time from runstat_grouppost
             order by updated_time desc limit 1"""
     )
-    last_post_time = db_curs.fetchone()[0]
+    query_result = db_curs.fetchone()
     # get unixtime-60seconds of last post
-    since = str(int(last_post_time.strftime('%s')) - 60)
+    if query_result:
+        last_post_time = query_result[0]
+        since = str(int(last_post_time.strftime('%s')) - 60)
+    else:
+        since = '0'
     # make a query to facebook with 'since' parametr
     fields = 'id,from,updated_time,created_time,message,attachments'
     kwargs = {'fields': fields, 'limit': 200, 'since': since}
