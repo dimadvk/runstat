@@ -145,7 +145,7 @@ def renew_group_posts(graph_obj, group_id):
             break
         posts_page = requests.get(url_next_page).json()
         posts_list.extend(posts_page.get('data', []))
-
+    print "Count received posts: ", len(posts_list)
     posts_pretty_list = []
     for post in posts_list:
         # check attachment
