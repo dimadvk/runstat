@@ -24,8 +24,6 @@ def member(request, pk):
     posts = GroupPost.objects.filter(author=pk)
     # add attachments to posts here
     context.update({'posts': posts})
-    for post in posts:
-        print post.object_id, post.message
     return render(request, 'runstat/member.html', context)
 
 
