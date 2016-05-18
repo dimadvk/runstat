@@ -15,14 +15,15 @@
 	              <span class="post-title">Created: {{post.created_time}}</span>
 	          </div>
 	          <div class="panel-body post-body-wrap">
-	            <p><pre>{{post.message}}</pre></p>
+	            <div class="post-message">{{post.message}}</div>
 
 				{% for photo in post.postattachments_set.all %}
-					{% if photo.url %}:
-						<img heigh="300" width="300" src="{{photo.url}}"/>
+					{% if photo.url %}
+						<img class="post-photo" heigh="300" width="300" src="{{photo.url}}"/>
+					{% else %}
+					<span class="attachments-title">{{photo.title}}</span>
 					{% endif %}
 				{% endfor %}
-				<span>{{photo.title}}</span>
 	          </div>
 	        </div>
 		{% endfor %}

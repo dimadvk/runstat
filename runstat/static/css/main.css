@@ -41,6 +41,15 @@ body{
 }
 
 .post-body-wrap {
-    white-space: pre-line;
+    white-space: normal;
     word-wrap: break-word;
+}
+
+.attachments-title{
+	color: red;
+	font-weight: bold;
+}
+
+.post-message{
+	margin-bottom: 20px;
 }
