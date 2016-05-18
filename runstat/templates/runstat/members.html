@@ -1,12 +1,24 @@
 {% extends "runstat/base.html" %}
 
-{% block meta_title %}Group Members{% endblock meta_title %}
+{% load el_pagination_tags %}
 
-{% block title %}Group Members [ search field ]
-{% endblock title %}
+{% block meta_title %}Group Members{% endblock meta_title %}
 
 {% block content %}
 
+<div class="row">
+    <div class="col-xs-6">
+        <h2>Список учасників группи</h2>
+    </div>
+    <div class="col-xs-6">
+        <form mehod="get" action="">
+            <input type="" name="search_name" placeholder="Ім’я Прізвище">
+            <input type="submit" value="Пошук">
+        </form>
+    </div>
+</div>
+
+{% paginate members %}
 <table class="table table-striped table-hover">
   <thead>
       <tr>
@@ -19,9 +31,10 @@
         <tr>
             <td><img src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture"
                     alt="Photo" class="img-rounded"></td>
-            <td>{{member.name}}</td>
+            <td><a href="{% url 'member' member.object_id %}">{{member.name}}</a></td>
         </tr>
       {% endfor %}
   </tbody>
 </table>
+{% show_pages %}
 {% endblock %}

@@ -17,10 +17,11 @@ from django.conf.urls import url
 from django.contrib import admin
 # from django.views.generic import TemplateView
 
-from runstat.views import group_members
+from runstat.views import group_members, member
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # url(r'^$', TemplateView.as_view(template_name='runstat/runners.html')),
     url(r'^$', group_members, name='group_members'),
+    url(r'^member/(?P<pk>\d+)/$', member, name='member')
 ]

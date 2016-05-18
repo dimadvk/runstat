@@ -2,13 +2,17 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import GroupMember, GroupPost, PostAttachments
+from .models import GroupMember, GroupPost
 
 
 def group_members(request):
     """Group Members list."""
-    # TODO: add pagination
-    members = GroupMember.objects.all().order_by('object_id')[:50]
+    search_name = request.GET.get('search_name')
+    if search_name:
+        members = GroupMember.objects.filter(
+            name__contains=search_name).order_by('name')
+    else:
+        members = GroupMember.objects.all().order_by('name')
     return render(request, 'runstat/members.html', {'members': members})
 
 
@@ -20,6 +24,8 @@ def member(request, pk):
     posts = GroupPost.objects.filter(author=pk)
     # add attachments to posts here
     context.update({'posts': posts})
+    for post in posts:
+        print post.object_id, post.message
     return render(request, 'runstat/member.html', context)
 
 

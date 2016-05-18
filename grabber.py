@@ -10,8 +10,8 @@ from pytz import utc
 
 
 # constants
-TOKEN_VALIDATION_URL = 'https://graph.facebook.com/oauth/access_token_info'
 BASE_DIR = os.path.dirname(__file__)
+TOKEN_VALIDATION_URL = 'https://graph.facebook.com/oauth/access_token_info'
 TOKEN_FILE = os.path.join(BASE_DIR, '.fb_token')
 SECRETS_FILE = os.path.join(BASE_DIR, 'root', 'secrets.json')
 with open(SECRETS_FILE) as f:
@@ -155,7 +155,8 @@ def renew_group_posts(graph_obj, group_id):
         updated_time = dateutil.parser.parse(post.get('updated_time'))
         updated_time = updated_time.astimezone(utc).replace(tzinfo=None)
         message = post.get('message', '')
-        message = message.encode('unicode_escape')
+        # message = message.encode('unicode_escape')
+        message = message.encode('utf-8')
         posts_pretty_list.append({
             'object_id': post.get('id'),
             'author': post.get('from').get('id'),
@@ -236,7 +237,7 @@ def get_group_posts(graph_obj, group_id):
         updated_time = dateutil.parser.parse(post.get('updated_time'))
         updated_time = updated_time.astimezone(utc).replace(tzinfo=None)
         message = post.get('message', '')
-        message = message.encode('unicode_escape')
+        message = message.encode('utf-8', 'unicode_escape')
         posts_pretty_list.append({
             'object_id': post.get('id'),
             'author': post.get('from').get('id'),
@@ -264,7 +265,7 @@ def get_attachments(post):
             pass
     title = ''
     try:
-        title = post['attachments']['data'][0]['title'].encode('unicode_escape')
+        title = post['attachments']['data'][0]['title'].encode('utf-8')
     except:
         pass
     if 'attachments' in post.keys() and not links and not title:
