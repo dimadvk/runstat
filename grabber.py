@@ -7,6 +7,7 @@ import requests
 import dateutil.parser
 import MySQLdb
 from pytz import utc
+from time import sleep
 
 
 # constants
@@ -133,7 +134,7 @@ def renew_group_posts(graph_obj, group_id):
         since = '0'
     # make a query to facebook with 'since' parametr
     fields = 'id,from,updated_time,created_time,message,attachments'
-    kwargs = {'fields': fields, 'limit': 200, 'since': since}
+    kwargs = {'fields': fields, 'limit': 300, 'since': since}
     posts_page = graph_obj.get_connections(
         id=group_id, connection_name='feed', **kwargs)
     posts_list = posts_page.get('data', [])

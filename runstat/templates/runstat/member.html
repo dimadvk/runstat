@@ -1,29 +1,28 @@
 {% extends "runstat/base.html" %}
 
-{% block meta_title %}Member: {% endblock meta_title %}
+{% block meta_title %}Member: {{member.name}}{% endblock meta_title %}
 
-{% block title %}Member: {% endblock title %}
+{% block title %}Member: {{member.name}}{% endblock title %}
 
 {% block content %}
 
-<div class="row">
-	<div class="col-xs-2">
-		<img src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture"
-                    alt="Photo" class="img-rounded"></td>
-	</div>
-	<div class="col-xs-10">
-		{{member.name}}
-	</div>
-</div>"
 <div class="row">
 	<div class="col-xs-12">
 		{% for post in posts %}
 	        <div class="panel panel-success">
 	          <div class="panel-heading">
-	            <span class="post-title">{{post.created_time}}</span>
+				  <span class="counter">#{{forloop.counter}}</span>
+	              <span class="post-title">Created: {{post.created_time}}</span>
 	          </div>
 	          <div class="panel-body post-body-wrap">
 	            <p><pre>{{post.message}}</pre></p>
+
+				{% for photo in post.postattachments_set.all %}
+					{% if photo.url %}:
+						<img heigh="300" width="300" src="{{photo.url}}"/>
+					{% endif %}
+				{% endfor %}
+				<span>{{photo.title}}</span>
 	          </div>
 	        </div>
 		{% endfor %}
