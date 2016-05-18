@@ -25,6 +25,27 @@
 
 	</head>
 	<body>
+
+	    <nav class="navbar">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="{% url 'group_members' %}"><img height="70" width="150" src="{% static 'img/run8.png' %}" alt="&laquo;Побігли&raquo;" class="img-rounded"/></a>
+	        </div>
+	        <div id="navbar" class="collapse navbar-collapse">
+	          <ul class="nav navbar-nav">
+	            <li><a href="{% url 'group_members' %}">Список учасників</a></li>
+	            <li><a href="{% url 'about' %}">Про сайт</a></li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </nav>
+
         <div class="wrap">
 
 			<!-- Start Containet -->
@@ -36,7 +57,7 @@
 					<!-- Logo -->
 					{% block logo %}
 					<div class="col-xs-5">
-	                    <h2><a href="{% url 'group_members' %}">Members</a></h2>
+	                    <h2>#Побігли</h2>
 					</div>
 					{% endblock logo %}
 
@@ -49,7 +70,7 @@
 				<!-- Start Content Columns-->
 				<div class="row" id="content-columns">
 					<div class="col-xs-12" id="content-column">
-					    <h2>{% block title %}{% endblock title %}</h2>
+					    <h3>{% block title %}{% endblock title %}</h3>
 					    {% block content %}{% endblock content %}
 					</div>
 				</div>

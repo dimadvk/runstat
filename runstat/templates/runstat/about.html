@@ -1,9 +1,28 @@
 {% extends "runstat/base.html" %}
 
-{% block meta_title %}About{% endblock meta_title %}
+{% block meta_title %}Про Сайт{% endblock meta_title %}
 
-{% block title %}About{% endblock title %}
+{% block title %}Про Сайт{% endblock title %}
 
 {% block content %}
+<p>
+	Все почалося із нижче наведеного посту в Facebook.<br>
+А цей сайт написаний just for fun.. .<br>
+Для зручного перегляду постів учасників, для збору статистики.<br>
+Лінк на групу в Facebook, звідки береться інфа -
+<a href="https://www.facebook.com/dubilet/posts/10154176084823552">&laquo;Побежали&raquo;</a>
+</p>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=1167353049962997";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+<div class="fb-post" data-href="https://www.facebook.com/dubilet/posts/10154176084823552" data-width="750" data-show-text="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/dubilet/posts/10154176084823552"><p>&#x421;&#x43a;&#x43e;&#x440;&#x43e; &#x43b;&#x435;&#x442;&#x43e;, &#x43d;&#x430;&#x434;&#x43e; &#x43d;&#x430;&#x431;&#x438;&#x440;&#x430;&#x442;&#x44c; &#x444;&#x43e;&#x440;&#x43c;&#x443;. &#x412; &#x441;&#x432;&#x44f;&#x437;&#x438; &#x441; &#x44d;&#x442;&#x438;&#x43c; &#x43f;&#x440;&#x438;&#x433;&#x43b;&#x430;&#x448;&#x430;&#x4
 
 {% endblock %}

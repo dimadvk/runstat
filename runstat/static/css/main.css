@@ -53,3 +53,14 @@ body{
 	margin-bottom: 10px;
 	margin-top: 20px;
 }
+.navbar-nav li{
+	font-size: 1.4em;
+	font-weight: 700;
+}
+.navbar{
+	background-color: #cbd2e1;
+	border-radius: 0;
+}
+a{
+	color: #2d467b;
+}
