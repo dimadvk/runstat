@@ -7,7 +7,6 @@ import requests
 import dateutil.parser
 import MySQLdb
 from pytz import utc
-from time import sleep
 
 
 # constants
