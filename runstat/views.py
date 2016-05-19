@@ -7,13 +7,17 @@ from .models import GroupMember, GroupPost
 
 def group_members(request):
     """Group Members list."""
+    context = {}
     search_name = request.GET.get('search_name')
     if search_name:
         members = GroupMember.objects.filter(
-            name__contains=search_name).order_by('name')
+            name__icontains=search_name).order_by('name')
     else:
         members = GroupMember.objects.all().order_by('name')
-    return render(request, 'runstat/members.html', {'members': members})
+    context.update({'members': members})
+    # add number of members
+    context.update({'members_count': members.count()})
+    return render(request, 'runstat/members.html', context)
 
 
 def member(request, pk):

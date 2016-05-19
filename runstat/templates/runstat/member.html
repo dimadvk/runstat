@@ -2,25 +2,45 @@
 
 {% block meta_title %}Member: {{member.name}}{% endblock meta_title %}
 
-{% block title %}Member: {{member.name}}{% endblock title %}
-
 {% block content %}
-
+<div class="row">
+	<div class="col-xs-12">
+		<div class="media">
+		  <div class="media-left">
+		    <a href="#">
+			  <img class="media-object img-rounded" src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture" alt="Photo">
+		    </a>
+		  </div>
+		  <div class="media-body">
+		    <h4 class="media-heading">
+				<a class="btn btn-xs btn-social-icon btn-facebook" href="https://www.facebook.com/{{member.object_id}}" target="_blank"><span class="fa fa-facebook"></span></a>
+				<a href="https://www.facebook.com/{{member.object_id}}" target="_blank">{{member.name}}</a>
+			</h4>
+		    media-headeing
+		  </div>
+		</div>
+	</div>
+</div>
+<h3>Пости в Facebook групі</h3>
 <div class="row">
 	<div class="col-xs-12">
 
 		{% for post in posts %}
-	        <div class="panel panel-success">
+	        <div class="panel panel-default">
 	          <div class="panel-heading">
 				  <span class="counter">#{{forloop.counter}}</span>
-	              <span class="post-title">Created: {{post.created_time}}</span>
+				  <a class="btn btn-xs btn-social-icon btn-facebook" href="https://facebook.com/{{post.object_id}}"><span class="fa fa-facebook"></span></a>
+				  <a href="https://facebook.com/{{post.object_id}}" target="_blank">
+					  <span class="post-title">Created: {{post.created_time}}</span>
+				  </a>
+
 	          </div>
 	          <div class="panel-body post-body-wrap">
 	            <div class="post-message">{{post.message}}</div>
 
 				{% for photo in post.postattachments_set.all %}
 					{% if photo.url %}
-						<img class="post-photo" heigh="300" width="300" src="{{photo.url}}"/>
+						<img class="post-photo" heigh="250" width="250" src="{{photo.url}}"/>
 					{% else %}
 					<span class="attachments-title">{{photo.title}}</span>
 					{% endif %}

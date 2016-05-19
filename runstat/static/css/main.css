@@ -1,6 +1,7 @@
 /* Global Styles */
 h1, h2, h3, h4, h5, h6 {
-	font-weight: bold;
+	font-weight: 500;
+	line-height: 1.1;
 }
 
 .alert {
@@ -55,7 +56,7 @@ body{
 }
 .navbar-nav li{
 	font-size: 1.4em;
-	font-weight: 700;
+	font-weight: 500;
 }
 .navbar{
 	background-color: #cbd2e1;
@@ -66,4 +67,11 @@ a{
 }
 .navbar-brand img{
 	border: medium inset #2d467b;
+}
+.members-list-name{
+	font-size: 1.2em;
+}
+.counter{
+	/*font-size: 1.3em;*/
+	font-weight: 500;
 }

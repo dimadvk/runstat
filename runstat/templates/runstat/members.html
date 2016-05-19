@@ -8,7 +8,10 @@
 
 <div class="row">
     <div class="col-xs-9">
-        <h2>Список учасників <a href="https://www.facebook.com/groups/1745974432290684"><u>Facebook-групи</u></a></h2>
+        <h2>
+            Список учасників <a href="https://www.facebook.com/groups/1745974432290684" target="_blank"><u>Facebook-групи</u></a>
+            <span style="{font-weight: 900;}">({{members_count}})</span>
+        </h2>
     </div>
     <div class="col-xs-3 search-form">
         <form mehod="get" action="">
@@ -29,9 +32,16 @@
   <tbody>
       {% for member in members %}
         <tr>
-            <td><img src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture"
-                    alt="Photo" class="img-rounded"></td>
-            <td><a href="{% url 'member' member.object_id %}">{{member.name}}</a></td>
+            <td>
+                <img src="http://graph.facebook.com/v2.5/{{member.object_id}}/picture"
+                    alt="Photo" class="img-rounded">
+            </td>
+            <td>
+                <div class="members-list-name">
+                    <a class="btn btn-xs btn-social-icon btn-facebook" href="https://www.facebook.com/{{member.object_id}}" target="_blank"><span class="fa fa-facebook"></span></a>
+                    <a href="{% url 'member' member.object_id %}">{{member.name}}</a>
+                </div>
+            </td>
         </tr>
       {% endfor %}
   </tbody>
