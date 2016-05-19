@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12" >
 		<div class="media">
 		  <div class="media-left">
 		    <a href="#">
@@ -16,7 +16,15 @@
 				<a class="btn btn-xs btn-social-icon btn-facebook" href="https://www.facebook.com/{{member.object_id}}" target="_blank"><span class="fa fa-facebook"></span></a>
 				<a href="https://www.facebook.com/{{member.object_id}}" target="_blank">{{member.name}}</a>
 			</h4>
-		    media-headeing
+		    <div class="member-details">
+				<p>
+					Кількість постів в групі: {{posts|length}}
+				</p>
+				<p>
+					Використані теги:
+				</p>
+		    </div>
+
 		  </div>
 		</div>
 	</div>

@@ -7,6 +7,7 @@ import requests
 import dateutil.parser
 import MySQLdb
 from pytz import utc
+import re
 
 
 # constants
@@ -128,7 +129,7 @@ def renew_group_posts(graph_obj, group_id):
     # get unixtime of last post
     if query_result:
         last_post_time = query_result[0]
-        since = last_post_time.strftime('%s')
+        since = str(int(last_post_time.strftime('%s')) - 3600)
     else:
         since = '0'
     # make a query to facebook with 'since' parametr
@@ -191,7 +192,6 @@ def renew_group_posts(graph_obj, group_id):
              post['message']))
         # and write attachments info to database
         links = post['attachments']['links']
-        # write ne attachments info
         post_id = str(db_curs.lastrowid)
         if len(links) == 0:
             db_curs.execute(
@@ -207,6 +207,40 @@ def renew_group_posts(graph_obj, group_id):
                     (post_id,
                      link,
                      post['attachments']['title'])
+                )
+    # write posts tags
+    db_conn.commit()
+    db_conn.close()
+    write_posts_tags(posts_pretty_list)
+
+
+def write_posts_tags(posts):
+    """Get list of posts, collect tags from messages and write to database."""
+    # make list of dicts {'author': 'tags'}
+    members_tags = []
+    for post in posts:
+        tags = re.findall(
+            re.compile(r'\#\w+', re.IGNORECASE|re.U), post['message'])
+        members_tags.append(
+            {'author': post['author'],
+             'tags': tags}
+        )
+    # write tags to database
+    db_conn, db_curs = get_db()
+    for el in members_tags:
+        # check if authos is still a member of the group
+        db_curs.execute(
+            """select count(object_id) from runstat_groupmember
+                where object_id=%s""",
+            (el['author'], )
+        )
+        count = db_curs.fetchone()[0]
+        if count == 1:
+            for tag in el['tags']:
+                db_curs.execute(
+                    """replace into runstat_membertag (author_id, tag)
+                        values (%s, %s)""",
+                    (el['author'], tag)
                 )
     db_conn.commit()
     db_conn.close()

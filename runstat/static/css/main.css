@@ -72,6 +72,10 @@ a{
 	font-size: 1.2em;
 }
 .counter{
-	/*font-size: 1.3em;*/
 	font-weight: 500;
+}
+
+.member-details{
+	margin-left: 25px;
+	font-size: 1.2em;
 }

@@ -21,6 +21,23 @@ class GroupMember(models.Model):
     administrator = models.BooleanField()
 
 
+class MemberTag(models.Model):
+    """Model for tags which member mentioned in posts."""
+
+    class Meta:
+        unique_together = ('author', 'tag')
+
+    author = models.ForeignKey(
+        'GroupMember',
+        on_delete=models.CASCADE,
+        verbose_name='group member'
+    )
+    tag = models.CharField(
+        max_length=255,
+        verbose_name='Tag mentioned in post',
+    )
+
+
 class GroupPost(models.Model):
     """Model for post in group feed."""
 
