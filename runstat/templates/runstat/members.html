@@ -23,10 +23,8 @@
 {% if request.GET.search_name %}
 <div class="row">
     <div class="col-xs-12">
-        <code>
-        <span>Пошук за рядком: {{request.GET.search_name}}</span><br>
-        <span>Знайдено учасників: {{members_count}}</span>
-</code>
+        <code><span>Пошук за рядком: {{request.GET.search_name}}</span><br></code>
+        <code><span>Знайдено учасників: {{members_count}}</span></code>
     </div>
 </div>
 {% endif %}

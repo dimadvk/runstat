@@ -16,15 +16,15 @@
 				<a class="btn btn-xs btn-social-icon btn-facebook" href="https://www.facebook.com/{{member.object_id}}" target="_blank"><span class="fa fa-facebook"></span></a>
 				<a href="https://www.facebook.com/{{member.object_id}}" target="_blank">{{member.name}}</a>
 			</h4>
-		    <div class="member-details">
-				<p>
-					Кількість постів в групі: {{posts|length}}
-				</p>
-				<p>
-					Використані теги:
-				</p>
-		    </div>
-
+			<p>
+				<span class="member-details">Кількість постів в групі: {{posts|length}}</span>
+			</p>
+			<p>
+				<span class="member-details">Використані теги:</span>
+					{% for tag in tags %}
+						<a href="https://facebook.com/hashtag/{{tag}}" target="_blank">#{{tag}}, </a>
+					{% endfor %}
+			</p>
 		  </div>
 		</div>
 	</div>

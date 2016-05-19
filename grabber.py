@@ -220,7 +220,7 @@ def write_posts_tags(posts):
     members_tags = []
     for post in posts:
         tags = re.findall(
-            re.compile(r'\#\w+', re.IGNORECASE|re.U), post['message'])
+            re.compile(r'\#(\w+)', re.IGNORECASE|re.U), post['message'])
         members_tags.append(
             {'author': post['author'],
              'tags': tags}

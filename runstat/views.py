@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import GroupMember, GroupPost
+from .models import GroupMember, GroupPost, MemberTag
 
 
 def group_members(request):
@@ -23,11 +23,16 @@ def group_members(request):
 def member(request, pk):
     """Return member page including all posts related."""
     context = {}
+    # get member
     member = GroupMember.objects.get(object_id=pk)
     context.update({'member': member})
+    # get posts of member
     posts = GroupPost.objects.filter(author=pk)
-    # add attachments to posts here
     context.update({'posts': posts})
+    # get tags mentioned in posts
+    tags = MemberTag.objects.filter(author_id=pk)
+    tags = [x.tag for x in tags]
+    context.update({'tags': tags})
     return render(request, 'runstat/member.html', context)
 
 
