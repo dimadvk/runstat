@@ -68,8 +68,10 @@ a{
 .navbar-brand img{
 	border: medium inset #2d467b;
 }
-.members-list-name{
+.members-list-name,
+.members-list-posts-count{
 	font-size: 1.2em;
+	margin-top: 10px;
 }
 .counter{
 	font-weight: 500;
