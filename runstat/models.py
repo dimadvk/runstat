@@ -47,9 +47,10 @@ class GroupPost(models.Model):
         max_length=100,
         unique=True,
     )
-    author = models.BigIntegerField(
+    author = models.ForeignKey(
+        'GroupMember',
         verbose_name='author object id',
-        blank=False,
+        on_delete=models.CASCADE,
     )
     message = models.TextField(
         blank=True,

@@ -17,6 +17,10 @@ def group_members(request):
     context.update({'members': members})
     # add number of members
     context.update({'members_count': members.count()})
+    # add posts_num
+    object_id = '1143756885657529'
+    posts_num = {object_id: '25'}
+    context.update({'object_id': object_id, 'posts_num': posts_num})
     return render(request, 'runstat/members.html', context)
 
 

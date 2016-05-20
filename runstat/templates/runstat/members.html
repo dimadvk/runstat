@@ -7,14 +7,14 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-8">
         <h2>
             Список учасників <a href="https://www.facebook.com/groups/1745974432290684" target="_blank"><u>Facebook-групи</u></a>
         </h2>
     </div>
-    <div class="col-xs-3 search-form">
+    <div class="col-xs-4 search-form">
         <form mehod="get">
-            <input type="" name="search_name" value="{{request.GET.search_name}}">
+            <input type="text" maxlength="50" size="30" name="search_name" value="{{request.GET.search_name}}">
             <input type="submit" value="Пошук">
         </form>
     </div>
@@ -33,8 +33,9 @@
 <table class="table table-striped table-hover">
   <thead>
       <tr>
-          <th>Photo</th>
-          <th>Name</th>
+          <th>Фото</th>
+          <th>Ім’я</th>
+          <th>Кількість постів</th>
       </tr>
   </thead>
   <tbody>
@@ -48,6 +49,9 @@
                 <div class="members-list-name">
                     <a href="{% url 'member' member.object_id %}">{{member.name}}</a>
                 </div>
+            </td>
+            <td>
+                <span class="members-posts-num">{{member.membertag_set.count}}</span>
             </td>
         </tr>
       {% endfor %}

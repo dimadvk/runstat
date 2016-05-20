@@ -132,9 +132,10 @@ def renew_group_posts(graph_obj, group_id):
         since = str(int(last_post_time.strftime('%s')) - 3600)
     else:
         since = '0'
+    since = '1461158537'
     # make a query to facebook with 'since' parametr
     fields = 'id,from,updated_time,created_time,message,attachments'
-    kwargs = {'fields': fields, 'limit': 300, 'since': since}
+    kwargs = {'fields': fields, 'limit': 100, 'since': since}
     posts_page = graph_obj.get_connections(
         id=group_id, connection_name='feed', **kwargs)
     posts_list = posts_page.get('data', [])
@@ -167,9 +168,14 @@ def renew_group_posts(graph_obj, group_id):
             'attachments': attachments
         })
 
+    # get list of members id from database
+    db_curs.execute('select object_id from runstat_groupmember')
+    result = db_curs.fetchall()
+    members_id_list = [str(m[0]) for m in result]
     # write received posts to database
-    # write posts
     for post in posts_pretty_list:
+        if post['author'] not in members_id_list:
+            continue
         # write new post
         db_curs.execute(
             "select id from runstat_grouppost where object_id=%s",
@@ -183,7 +189,7 @@ def renew_group_posts(graph_obj, group_id):
             )
         db_curs.execute(
             """replace into runstat_grouppost
-                  (object_id, author, created_time, updated_time, message)
+                  (object_id, author_id, created_time, updated_time, message)
                         values (%s, %s, %s, %s, %s)""",
             (post['object_id'],
              post['author'],
