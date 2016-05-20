@@ -1,6 +1,7 @@
 """Views for runstat application."""
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.db.models import Count
 
 from .models import GroupMember, GroupPost, MemberTag
 
@@ -11,9 +12,11 @@ def group_members(request):
     search_name = request.GET.get('search_name')
     if search_name:
         members = GroupMember.objects.filter(
-            name__icontains=search_name).order_by('name')
+            name__icontains=search_name).annotate(
+                posts_count = Count('grouppost')).order_by('-posts_count')
     else:
-        members = GroupMember.objects.all().order_by('name')
+        members = GroupMember.objects.annotate(
+            posts_count = Count('grouppost')).order_by('-posts_count')
     context.update({'members': members})
     # add number of members
     context.update({'members_count': members.count()})

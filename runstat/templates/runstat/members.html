@@ -35,7 +35,7 @@
       <tr>
           <th>Фото</th>
           <th>Ім’я</th>
-          <th>Кількість постів</th>
+          <!-- <th>Кількість постів</th> -->
       </tr>
   </thead>
   <tbody>
@@ -50,9 +50,9 @@
                     <a href="{% url 'member' member.object_id %}">{{member.name}}</a>
                 </div>
             </td>
-            <td>
+            <!-- <td>
                 <span class="members-posts-num">{{member.membertag_set.count}}</span>
-            </td>
+            </td> -->
         </tr>
       {% endfor %}
   </tbody>

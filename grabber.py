@@ -132,7 +132,6 @@ def renew_group_posts(graph_obj, group_id):
         since = str(int(last_post_time.strftime('%s')) - 3600)
     else:
         since = '0'
-    since = '1461158537'
     # make a query to facebook with 'since' parametr
     fields = 'id,from,updated_time,created_time,message,attachments'
     kwargs = {'fields': fields, 'limit': 100, 'since': since}
@@ -226,7 +225,9 @@ def write_posts_tags(posts):
     members_tags = []
     for post in posts:
         tags = re.findall(
-            re.compile(r'\#(\w+)', re.IGNORECASE|re.U), post['message'])
+            re.compile(r'\#(\w+)', re.IGNORECASE|re.U),
+            post['message'].decode('utf8'),
+        )
         members_tags.append(
             {'author': post['author'],
              'tags': tags}
@@ -305,7 +306,8 @@ def get_attachments(post):
             pass
     title = ''
     try:
-        title = post['attachments']['data'][0]['title'].encode('utf-8')
+        title = post['attachments']['data'][0]['title'].encode(
+            'utf-8', 'unicode_escape')
     except:
         pass
     if 'attachments' in post.keys() and not links and not title:
