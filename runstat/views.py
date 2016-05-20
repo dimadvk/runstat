@@ -27,7 +27,7 @@ def member(request, pk):
     member = GroupMember.objects.get(object_id=pk)
     context.update({'member': member})
     # get posts of member
-    posts = GroupPost.objects.filter(author=pk)
+    posts = GroupPost.objects.filter(author=pk).order_by('created_time')
     context.update({'posts': posts})
     # get tags mentioned in posts
     tags = MemberTag.objects.filter(author_id=pk)
