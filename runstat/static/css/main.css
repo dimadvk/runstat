@@ -62,8 +62,9 @@ body{
 	background-color: #cbd2e1;
 	border-radius: 0;
 }
-a{
-	color: #2d467b !important;
+a,
+.pagination > li > a{
+	color: #2d467b;
 }
 .navbar-brand img{
 	border: medium inset #2d467b;
