@@ -63,7 +63,7 @@ body{
 	border-radius: 0;
 }
 a{
-	color: #2d467b;
+	color: #2d467b !important;
 }
 .navbar-brand img{
 	border: medium inset #2d467b;
@@ -84,4 +84,8 @@ a{
 }
 .navbar-toggle, .icon-bar{
 	border: 1px solid #2d467b;
+}
+.pagination > .active > span{
+	background-color: #2d467b;
+	border-color: #2d467b;
 }

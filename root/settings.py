@@ -42,7 +42,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEBUG = False
+#DEBUG = False
 
 ALLOWED_HOSTS = ['runstat.local', 'run.my.to']
 
@@ -76,7 +76,10 @@ ROOT_URLCONF = 'root.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # os.path.join(BASE_DIR, 'runstat', 'templates', 'el_pagination'),
+            # os.path.join(BASE_DIR, 'runstat', 'templates', 'runstat'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
