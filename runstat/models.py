@@ -70,11 +70,8 @@ class GroupPost(models.Model):
 class PostAttachments(models.Model):
     """Model for post attachments."""
 
-    # TODO: make it: to_field=object_id
-    # it'll reduce complexety in grabber.py
     post = models.ForeignKey(
         'GroupPost',
-        # to_field='object_id',
         verbose_name='post id',
         on_delete=models.CASCADE,
     )
