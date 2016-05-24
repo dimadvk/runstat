@@ -16,7 +16,7 @@ class GroupMember(models.Model):
     name = models.CharField(
         verbose_name='member name',
         blank=False,
-        max_length=256,
+        max_length=255,
     )
     administrator = models.BooleanField()
 
@@ -33,7 +33,7 @@ class MemberTag(models.Model):
         verbose_name='group member'
     )
     tag = models.CharField(
-        max_length=255,
+        max_length=200,
         verbose_name='Tag mentioned in post',
     )
 
