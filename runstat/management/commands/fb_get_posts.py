@@ -210,7 +210,7 @@ class Command(BaseCommand):
         for fb_post in posts_list:
             get_author = GroupMember.objects.filter(
                 object_id=fb_post['author'])
-            if len(get_author):
+            if any(get_author):
                 db_post, created = GroupPost.objects.update_or_create(
                     object_id=fb_post['object_id'],
                     author=get_author[0],
