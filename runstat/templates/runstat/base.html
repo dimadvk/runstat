@@ -2,103 +2,105 @@
 
 <!DOCTYPE html>
 <html lang="uk">
-	<head>
-		<meta charset="UTF-8"/>
+    <head>
+        <meta charset="UTF-8"/>
         <title>#побігли - {% block meta_title %}{% endblock meta_title %}</title>
-		<meta name="description"
+        <meta name="description"
             value="Run statistic" />
         <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 
         <!-- Include Styles -->
         <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/bootstrap/3.3.0/css/bootstrap.min.css">
-		<link rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.0.0/bootstrap-social.min.css" charset="utf-8">
-		<script src="https://use.fontawesome.com/c3422f5861.js"></script>
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.0.0/bootstrap-social.min.css" charset="utf-8">
+        <script src="https://use.fontawesome.com/c3422f5861.js"></script>
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-	{% block extra_css %}{% endblock extra_css %}
+    {% block extra_css %}{% endblock extra_css %}
 
-	</head>
-	<body>
+    </head>
+    <body>
 
-	    <nav class="navbar">
-	      <div class="container">
-	        <div class="navbar-header">
-	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-	            <span class="sr-only">Toggle navigation</span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	          </button>
-	          <a class="navbar-brand" href="{% url 'group_members' %}"><img height="70" width="150" src="{% static 'img/run8.png' %}" alt="&laquo;Побігли&raquo;" class="img-rounded"/></a>
-	        </div>
-	        <div id="navbar" class="collapse navbar-collapse">
-	          <ul class="nav navbar-nav">
-	            <li><a href="{% url 'group_members' %}">Список учасників</a></li>
-				<li><a href="#">Статистика</a></li>
-				<li><a href="https://www.facebook.com/groups/1745974432290684" target="_blank">Група в Facebook</a></li>
-	            <li><a href="{% url 'about' %}">Про сайт</a></li>
-	          </ul>
-	        </div><!--/.nav-collapse -->
-	      </div>
-	    </nav>
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-header">
+                <div class="pull-left">
+                    <a class="navbar-brand" href="{% url 'group_members' %}"><img height="50" width="120" src="{% static 'img/run8.png' %}" alt="&laquo;Побігли&raquo;" class="img-rounded"/></a>
+                </div>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="{% url 'group_members' %}">Список учасників</a></li>
+                <li><a href="#">Статистика</a></li>
+                <li><a href="https://www.facebook.com/groups/1745974432290684" target="_blank">Група в Facebook</a></li>
+                <li><a href="{% url 'about' %}">Про сайт</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
 
         <div class="wrap">
 
-			<!-- Start Containet -->
-			<div class="container">
+            <!-- Start Containet -->
+            <div class="container">
 
-				<!-- Start Header -->
-				<div class="row" id="header">
+                <!-- Start Header -->
+                <div class="row" id="header">
 
-					<!-- Logo -->
-					{% block logo %}
-					<div class="col-xs-5">
-	                    <h2>#Побігли</h2>
-					</div>
-					{% endblock logo %}
+                    <!-- Logo -->
+                    {% block logo %}
+                    <!-- <div class="col-xs-5">
+                        <h2>#Побігли</h2>
+                    </div> -->
+                    {% endblock logo %}
 
-				</div>
-				<!-- End Header -->
+                </div>
+                <!-- End Header -->
 
-				<!-- Start SubHeader -->
-				<!-- End SubHeader -->
+                <!-- Start SubHeader -->
+                <!-- End SubHeader -->
 
-				<!-- Start Content Columns-->
-				<div class="row" id="content-columns">
-					<div class="col-xs-12" id="content-column">
-					    <h3>{% block title %}{% endblock title %}</h3>
-					    {% block content %}{% endblock content %}
-					</div>
-				</div>
-				<!-- End Content Columns -->
+                <!-- Start Content Columns-->
+                <div class="row" id="content-columns">
+                    <div class="col-xs-12" id="content-column">
+                        <h3>{% block title %}{% endblock title %}</h3>
+                        {% block content %}{% endblock content %}
+                    </div>
+                </div>
+                <!-- End Content Columns -->
 
-	            <!-- End Container -->
-			</div>
+                <!-- End Container -->
+            </div>
         </div> {# id=wrap #}
 
         <!-- Start Footer -->
         <div class="container footer">
             <a href="https://facebook.com/hashtag/побігли" target="_blank">#побігли</a>
-			<a href="https://facebook.com/hashtag/побежали" target="_blank">#побежали</a>
+            <a href="https://facebook.com/hashtag/побежали" target="_blank">#побежали</a>
         </div>
         <!-- End Footer -->
 
-		<!-- Javascript Section -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+        <!-- Javascript Section -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-		<script src="https://cdn.jsdelivr.net/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-		{# charts https://github.com/mher/chartkick.py #}
-		<script src="http://www.google.com/jsapi"></script>
-		<!-- <script src="ck/static/chartkick.js"></script> -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="http://code.highcharts.com/highcharts.js"></script>
-		{# endcharts #}
+        <script src="https://cdn.jsdelivr.net/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        {# charts https://github.com/mher/chartkick.py #}
+        <script src="http://www.google.com/jsapi"></script>
+        <!-- <script src="ck/static/chartkick.js"></script> -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        {# endcharts #}
         <!-- <script src="{% static 'js/main.js' %}"></script> -->
         {% block extra_js %}{% endblock extra_js %}
 
-	</body>
+    </body>
 
 
 </html>

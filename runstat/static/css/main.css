@@ -1,20 +1,20 @@
 /* Global Styles */
 h1, h2, h3, h4, h5, h6 {
-	font-weight: 500;
-	line-height: 1.1;
+    font-weight: 500;
+    line-height: 1.1;
 }
 
 .alert {
-	/* Ми додали відстань лише зверху елемента: -top */
-	margin-top: 10px;
+    /* Ми додали відстань лише зверху елемента: -top */
+    margin-top: 10px;
 }
 
 .footer {
-	/* pадаємо верхню межу елемента: ширина лінії, тип лінії,
-	 * колір лінії */
-	border-top: 1px solid #dddddd;
-	/*задаємо внутрішю відстанб елемента до верхньго краю */
-	padding-top: 10px;
+    /* pадаємо верхню межу елемента: ширина лінії, тип лінії,
+     * колір лінії */
+    border-top: 1px solid #dddddd;
+    /*задаємо внутрішю відстанб елемента до верхньго краю */
+    padding-top: 10px;
     text-align: center;
 }
 html,
@@ -42,51 +42,54 @@ body{
 }
 
 .attachments-title{
-	color: red;
-	font-weight: bold;
+    color: red;
+    font-weight: bold;
 }
 
 .post-message{
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .search-form{
-	margin-bottom: 10px;
-	margin-top: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
 }
 .navbar-nav li{
-	font-size: 1.4em;
-	font-weight: 500;
+    font-size: 1.4em;
+    font-weight: 500;
 }
 .navbar{
-	background-color: #cbd2e1;
-	border-radius: 0;
+    background-color: #cbd2e1;
+    border-radius: 0;
 }
 a,
 .pagination > li > a{
-	color: #2d467b;
+    color: #2d467b;
 }
 .navbar-brand img{
-	border: medium inset #2d467b;
+    border: 2px inset #2d467b;
+}
+.navbar-brand{
+    padding: 0;
 }
 .members-list-name,
 .members-list-posts-count{
-	font-size: 1.2em;
-	margin-top: 10px;
+    font-size: 1.2em;
+    margin-top: 10px;
 }
 .counter{
-	font-weight: 500;
+    font-weight: 500;
 }
 
 .member-details{
-	margin-left: 25px;
-	font-size: 1.2em;
-	font-weight: 500;
+    margin-left: 25px;
+    font-size: 1.2em;
+    font-weight: 500;
 }
 .navbar-toggle, .icon-bar{
-	border: 1px solid #2d467b;
+    border: 1px solid #2d467b;
 }
 .pagination > .active > span{
-	background-color: #2d467b;
-	border-color: #2d467b;
+    background-color: #2d467b;
+    border-color: #2d467b;
 }
