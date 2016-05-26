@@ -20,7 +20,7 @@ from django.contrib import admin
 from runstat.views import group_members, member, AboutPage
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^tocms/', admin.site.urls),
     # url(r'^$', TemplateView.as_view(template_name='runstat/runners.html')),
     url(r'^$', group_members, name='group_members'),
     url(r'^member/(?P<pk>\d+)/$', member, name='member'),
