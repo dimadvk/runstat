@@ -166,18 +166,17 @@ class Command(BaseCommand):
     def _write_attachments_info(self, fb_post, db_post):
         """Write to database info about attachments of post."""
         links = fb_post['attachments']['links']
-        if len(links) == 0:
+        for link in links:
+            PostAttachments.objects.create(
+                post=db_post,
+                url=link,
+                title=fb_post['attachments']['title']
+            )
+        else:
             PostAttachments.objects.create(
                 post=db_post,
                 title=fb_post['attachments']['title']
             )
-        else:
-            for link in links:
-                PostAttachments.objects.create(
-                    post=db_post,
-                    url=link,
-                    title=fb_post['attachments']['title']
-                )
 
     def _write_posts_tags(self, posts):
         """Collect tags from posts messages and write to database."""
