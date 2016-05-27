@@ -166,6 +166,7 @@ class Command(BaseCommand):
     def _write_attachments_info(self, fb_post, db_post):
         """Write to database info about attachments of post."""
         links = fb_post['attachments']['links']
+        PostAttachments.objects.filter(post=db_post).delete()
         for link in links:
             PostAttachments.objects.create(
                 post=db_post,
@@ -208,22 +209,19 @@ class Command(BaseCommand):
         posts_list = self._get_posts_from_fb(options)
         # write received posts to database
         for fb_post in posts_list:
-            get_author = GroupMember.objects.filter(
+            author = GroupMember.objects.filter(
                 object_id=fb_post['author'])
-            if any(get_author):
+            if any(author):
                 db_post, created = GroupPost.objects.update_or_create(
                     object_id=fb_post['object_id'],
-                    author=get_author[0],
+                    author=author[0],
                     defaults={
                         'created_time': fb_post['created_time'],
                         'updated_time': fb_post['updated_time'],
                         'message': fb_post['message'],
                     }
                 )
-            # except:
-            #     continue
-            # and write attachments info to database
-            if created:
+                # and write attachments info to database
                 self._write_attachments_info(fb_post, db_post)
         # # write posts tags
         self._write_posts_tags(posts_list)
