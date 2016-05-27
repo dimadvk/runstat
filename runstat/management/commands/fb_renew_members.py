@@ -89,8 +89,11 @@ class Command(BaseCommand):
         members_db_id = GroupMember.objects.values_list('object_id')
         members_db_id = [str(id[0]) for id in members_db_id]
 
+        print "Members nums:"
+        print "- got from FB: %d" % len(members_fb_id)
+        print "- got from DB: %d" % len(members_db_id)
+
         # make the diff: some body can join group, somebody leave.
-        # Ignore any changes in member's name or admin status
         left_the_group = set(members_db_id) - set(members_fb_id)
         join_the_group = set(members_fb_id) - set(members_db_id)
         joined_members = []
@@ -99,10 +102,18 @@ class Command(BaseCommand):
                 joined_members.append(member)
 
         # write changes to db
+        # delete members which left the group
         GroupMember.objects.filter(object_id__in=left_the_group).delete()
+        # save new members
         for member in joined_members:
             GroupMember.objects.create(
                 object_id=member['id'],
+                name=member['name'],
+                administrator=member['administrator'],
+            )
+        # update info of members (may be some change a name or "administrator")
+        for member in members_fb:
+            GroupMember.objects.filter(object_id=member['id']).update(
                 name=member['name'],
                 administrator=member['administrator'],
             )
