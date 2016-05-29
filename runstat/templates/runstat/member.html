@@ -52,7 +52,7 @@
 
                 {% for photo in post.postattachments_set.all %}
                     {% if forloop.first %}
-                        <div class="attachments-type">(){{photo.attach_type}})</div>
+                        <div class="attachments-type">({{photo.attach_type}})</div>
                     {% endif %}
                     {% if photo.url %}
                         <img class="post-photo" heigh="250" width="250" src="{{photo.url}}"/>

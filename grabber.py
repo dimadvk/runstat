@@ -264,4 +264,4 @@ if __name__ == '__main__':
     graph.access_token = get_access_token(graph)
 
     # grab group posts
-    renew_group_posts(graph, GROUP_ID)
+    # renew_group_posts(graph, GROUP_ID)
