@@ -44,7 +44,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = ['runstat.local', 'run.info.tm']
+ALLOWED_HOSTS = ['runstat.local', 'runstat.uk.to']
 
 
 # Application definition
