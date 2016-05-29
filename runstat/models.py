@@ -80,7 +80,8 @@ class PostAttachments(models.Model):
         blank=True,
         null=True,
     )
-    title = models.TextField(
+    attach_type = models.TextField(
         blank=True,
         null=True,
+        verbose_name="Attachments type"
     )

@@ -41,8 +41,7 @@ body{
     word-wrap: break-word;
 }
 
-.attachments-title{
-    color: red;
+.attachments-type{
     font-weight: bold;
 }
 

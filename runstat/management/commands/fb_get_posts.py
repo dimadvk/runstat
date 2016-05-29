@@ -5,7 +5,6 @@ import json
 import facebook
 import requests
 import dateutil.parser
-from pytz import utc
 from datetime import timedelta
 
 from django.core.management import BaseCommand
@@ -17,10 +16,6 @@ from runstat.models import GroupPost, PostAttachments, MemberTag, GroupMember
 class Command(BaseCommand):
     """Renew list of members of facebook group."""
 
-    # TODO: have to cpecify options to set 'since' parametr
-    # without 'since' specified script gets last 'updated time' from db
-    # args = '<--since=UNIXTIME, --limit=NUM>'
-    # args = ['--since=UNIXTIME',]
     help = "Get posts from feed of facebook group."
 
     def add_arguments(self, parser):
@@ -100,15 +95,14 @@ class Command(BaseCommand):
                     post['attachments']['data'][0]['media']['image']['src'])
             except:
                 pass
-        title = ''
+        attach_type = ''
         try:
-            title = post['attachments']['data'][0]['title'].encode(
+            attach_type = post['attachments']['data'][0]['type'].encode(
                 'utf-8', 'unicode_escape')
         except:
             pass
-        if 'attachments' in post.keys() and not links and not title:
-            title = 'Attachments exists, but undefined'
-        return {'links': links, 'title': title}
+        return {'links': links,
+                'attach_type': attach_type}
 
     def _get_posts_from_fb(self, options):
         """Return list of posts from fb-group feed."""
@@ -171,12 +165,12 @@ class Command(BaseCommand):
             PostAttachments.objects.create(
                 post=db_post,
                 url=link,
-                title=fb_post['attachments']['title']
+                attach_type=fb_post['attachments']['attach_type']
             )
         else:
             PostAttachments.objects.create(
                 post=db_post,
-                title=fb_post['attachments']['title']
+                attach_type=fb_post['attachments']['attach_type']
             )
 
     def _write_posts_tags(self, posts):
@@ -214,7 +208,7 @@ class Command(BaseCommand):
             if any(author):
                 db_post, created = GroupPost.objects.update_or_create(
                     object_id=fb_post['object_id'],
-                    author=author[0],
+                    author=author.first(),
                     defaults={
                         'created_time': fb_post['created_time'],
                         'updated_time': fb_post['updated_time'],
