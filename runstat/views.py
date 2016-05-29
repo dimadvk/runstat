@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 from .models import GroupMember, GroupPost, MemberTag
 
@@ -31,7 +32,7 @@ def member(request, pk):
     """Return member page including all posts related."""
     context = {}
     # get member
-    member = GroupMember.objects.get(object_id=pk)
+    member = get_object_or_404(GroupMember, object_id=pk)
     context.update({'member': member})
     # get posts of member
     posts = GroupPost.objects.filter(author=pk).order_by('-created_time')
