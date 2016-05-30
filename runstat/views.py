@@ -48,3 +48,35 @@ class AboutPage(TemplateView):
     """Return "About" page."""
 
     template_name = 'runstat/about.html'
+
+
+def statistic(request):
+    """Return statistic page."""
+    template = 'runstat/statistic.html'
+    context = {}
+    # count of deposits
+    deposits_amount = 759
+    context.update({'deposits_amount': deposits_amount})
+    # datetime of last update
+    actual_date = GroupPost.objects.order_by(
+        'updated_time').values('updated_time').last()
+    actual_date = actual_date['updated_time']
+    context.update({'actual_date': actual_date})
+    # count of all members
+    members_amount = GroupMember.objects.all().count()
+    context.update({'members_amount': members_amount})
+    # count of members who got finished
+    members_finished_amount = GroupMember.objects.all().annotate(
+        posts_count=Count('grouppost')).filter(posts_count__gte=12).count()
+    context.update({'members_finished_amount': members_finished_amount})
+    # count members who got out of race
+    members_fail_amount = deposits_amount - members_finished_amount
+    context.update({'members_fail_amount': members_fail_amount})
+    # count of members who join the group but didn't run
+    onlookers_amount = GroupMember.objects.all().annotate(
+        posts_count=Count('grouppost')).filter(posts_count__lte=1).count()
+    context.update({'onlookers_amount': onlookers_amount})
+    # members_age
+    # day time of runs
+
+    return render(request, template, context)
