@@ -7,6 +7,11 @@ from django.db import models
 class GroupMember(models.Model):
     """Model for group member."""
 
+    SEX_CHOICES = (
+        ('m', 'male'),
+        ('f', 'female'),
+    )
+
     object_id = models.BigIntegerField(
         verbose_name='member object id',
         unique=True,
@@ -18,7 +23,20 @@ class GroupMember(models.Model):
         blank=False,
         max_length=255,
     )
-    administrator = models.BooleanField()
+    administrator = models.BooleanField
+    sex = models.CharField(
+        verbose_name="sex of a member",
+        blank=True,
+        null=True,
+        max_length=1,
+        choices=SEX_CHOICES,
+        default=None,
+    )
+    age = models.PositiveSmallIntegerField(
+        verbose_name="age of a member",
+        blank=True,
+        null=True,
+    )
 
 
 class MemberTag(models.Model):
