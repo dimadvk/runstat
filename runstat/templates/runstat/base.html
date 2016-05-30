@@ -7,6 +7,7 @@
         <title>#побігли - {% block meta_title %}{% endblock meta_title %}</title>
         <meta name="description"
             value="Run statistic" />
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu:400&subset=cyrillic' rel='stylesheet' type='text/css'>
         <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 
         <!-- Include Styles -->
@@ -21,7 +22,6 @@
 
     </head>
     <body>
-
         <nav class="navbar">
           <div class="container">
             <div class="navbar-header">
@@ -36,7 +36,7 @@
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
                 <li><a href="{% url 'group_members' %}">Список учасників</a></li>
-                <li><a href="#">Статистика</a></li>
+                <li><a href="{% url 'statistic' %}">Статистика</a></li>
                 <li><a href="https://www.facebook.com/groups/1745974432290684" target="_blank">Група в Facebook</a></li>
                 <li><a href="{% url 'about' %}">Про сайт</a></li>
               </ul>
@@ -68,7 +68,9 @@
                 <!-- Start Content Columns-->
                 <div class="row" id="content-columns">
                     <div class="col-xs-12" id="content-column">
-                        <h3>{% block title %}{% endblock title %}</h3>
+                        <div class="page-header">
+                            <h2>{% block title %}{% endblock title %}</h2>
+                        </div>
                         {% block content %}{% endblock content %}
                     </div>
                 </div>
