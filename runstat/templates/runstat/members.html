@@ -5,18 +5,19 @@
 {% block meta_title %}Список Учасників{% endblock meta_title %}
 
 {% block content %}
-
-<div class="row">
-    <div class="col-xs-8">
-        <h2>
-            Список учасників <a href="https://www.facebook.com/groups/1745974432290684" target="_blank"><u>Facebook-групи</u></a>
-        </h2>
-    </div>
-    <div class="col-xs-4 search-form">
-        <form mehod="get">
-            <input type="text" maxlength="50" size="30" name="search_name" value="{{request.GET.search_name}}" placeholder="Ім’я/Прізвище">
-            <input type="submit" value="Пошук">
-        </form>
+<div class="page-header">
+    <div class="row">
+        <div class="col-xs-8">
+            <h2>
+                Список учасників <a href="https://www.facebook.com/groups/1745974432290684" target="_blank"><u>Facebook-групи</u></a>
+            </h2>
+        </div>
+        <div class="col-xs-4 search-form">
+            <form mehod="get">
+                <input type="text" maxlength="50" size="30" name="search_name" value="{{request.GET.search_name}}" placeholder="Ім’я/Прізвище">
+                <input type="submit" value="Пошук">
+            </form>
+        </div>
     </div>
 </div>
 

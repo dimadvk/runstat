@@ -33,7 +33,11 @@
         </div>
     </div>
 </div>
-{% if posts %}<h3>Пости в Facebook групі</h3>{% endif %}
+{% if posts %}
+<div class="page-header">
+    <h3>Пости в Facebook групі</h3>
+</div>
+{% endif %}
 <div class="row">
     <div class="col-xs-12">
 
@@ -51,12 +55,14 @@
                 <div class="post-message">{{post.message|linebreaksbr}}</div>
 
                 {% for photo in post.postattachments_set.all %}
-                    {% if forloop.first %}
-                        <div class="attachments-type">(Attachments: {{photo.attach_type}})</div>
-                    {% endif %}
-                    {% if photo.url %}
+                        {% if forloop.first %}
+                            {% if photo.attach_type %}
+                            <div class="attachments-type">(Attachments: {{photo.attach_type}})</div>
+                            {% endif %}
+                        {% endif %}
+                        {% if photo.url %}
                         <img class="post-photo" heigh="250" width="250" src="{{photo.url}}"/>
-                    {% endif %}
+                        {% endif %}
                 {% endfor %}
               </div>
             </div>
