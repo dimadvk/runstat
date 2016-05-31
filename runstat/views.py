@@ -83,5 +83,11 @@ def statistic(request):
         'members_fail_amount': members_fail_amount,
         'profit': profit,
     })
-
     return render(request, template, context)
+
+
+def test(request):
+    """Just test page."""
+    context = {}
+    templte = 'runstat/test.html'
+    return render(request, templte, context)

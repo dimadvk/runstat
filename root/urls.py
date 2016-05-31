@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 # from django.views.generic import TemplateView
 
-from runstat.views import group_members, member, AboutPage, statistic
+from runstat.views import group_members, member, AboutPage, statistic, test
 
 urlpatterns = [
     url(r'^tocms/', admin.site.urls),
@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^member/(?P<pk>\d+)/$', member, name='member'),
     url(r'^about/$', AboutPage.as_view(), name='about'),
     url(r'^statistic/$', statistic, name='statistic'),
+    url(r'^test/$', test, name='test'),
 ]
