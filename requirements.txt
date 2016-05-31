@@ -7,6 +7,7 @@ decorator==4.0.9
 Django==1.9.6
 django-el-pagination==2.1.2
 django-google-charts==0.1.1
+django-qsstats-magic==0.7.2
 enum34==1.1.4
 facebook-sdk==1.0.0
 gunicorn==19.5.0

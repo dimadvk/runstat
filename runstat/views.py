@@ -89,5 +89,5 @@ def statistic(request):
 def test(request):
     """Just test page."""
     context = {}
-    templte = 'runstat/test.html'
-    return render(request, templte, context)
+    template = 'runstat/test.html'
+    return render(request, template, context)
