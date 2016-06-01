@@ -23,7 +23,6 @@ class GroupMember(models.Model):
         blank=False,
         max_length=255,
     )
-    administrator = models.BooleanField
     sex = models.CharField(
         verbose_name="sex of a member",
         blank=True,

@@ -22,11 +22,105 @@
         Всього, в групу вступило близько <b>{{members_amount}}**</b> людей. Але <b>{{onlookers_amount}}</b> не зробили більше одного посту, тобто залишились "глядачами".<br>
         <small>* кількість не точна, так як враховано загальну кількість постів учасника. Але учасник міг постити в групу не тільки звіти про пробіжки.</small><br>
         <small>** цифра не точна. Похибка пов’язана із налаштуваннями приватності facebook-акаунтів учасників.</small><br>
+        <h3>Графіки:</h3>
         <!-- Розподіл учасників за віком: графік <br>
         Графік, в який час люди бігають <br>
         На якій пробіжці люди здавалися: графік<br>
         А тут видно, який відсоток людей звикли відкладати все на останній день: графік "фінішів" -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="chart_runs_per_day">-- Тут має бути графік --</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="chart_runs_per_hour">-- Тут має бути графік --</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="chart_age">-- Тут має бути графік --</div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-{% endblock %}
+{% block extra_js %}
+<script>
+$(function () {
+    $('#chart_runs_per_day').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Розподілення кількості пробіжок по дням'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category',
+            title: {
+                text: 'День травня місяця',
+                style: {
+                    fontSize: '15px'
+                }
+            },
+            labels: {
+                // rotation: -45,
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Кількість пробіжок',
+                style: {
+                    fontSize: '15px'
+                }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            // formatter: function() {
+            //     return 'День: <b>' + this.x + '</b><br> Пробіжок: <b>' + this.y + '</b> ';
+            // },
+            headerFormat: 'День: <b>{point.key}</b><br>',
+            pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+        },
+        series: [{
+            name: 'Пробіжки',
+            color: 'rgba(45, 70, 123, 0.30)',
+            data: [
+                {% for row in values %}
+                ['{{row.0|date:"d"}}', {{row.1}}],
+                {% endfor %}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.0f}', // without decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Verdana, sans-serif',
+                    fontWeight: 600,
+                }
+            }
+        }]
+    });
+});
+</script>
+{% endblock extra_js %}
+
+
+
+{% endblock content %}

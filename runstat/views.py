@@ -1,5 +1,9 @@
 """Views for runstat application."""
-from django.shortcuts import render
+from qsstats import QuerySetStats
+from datetime import datetime
+import pytz
+
+from django.shortcuts import render, render_to_response
 from django.views.generic import TemplateView
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
@@ -74,6 +78,26 @@ def statistic(request):
         posts_count=Count('grouppost')).filter(posts_count__lte=1).count()
     # members_age
     # day time of runs
+    # count of posts per day
+    # {'date_created': datetime.date(2016, 5, 28), 'posts_count': 328}
+    # posts_per_day = GroupPost.objects.all().extra({
+    #    'date_created': 'date(convert_tz(created_time, "GMT", "Europe/Kiev"))'
+    #    }).values('date_created').annotate(posts_count=Count('object_id'))
+    # tzkiev = pytz.timezone('Europe/Kiev')
+    # start_date = datetime.strptime('2016-05-01', '%Y-%m-%d')
+    # start_date = tzkiev.localize(start_date)
+    # end_date = datetime.strptime('2016-05-31', '%Y-%m-%d')
+    # end_date = tzkiev.localize(end_date)
+    start_date = datetime.strptime('2016-05-01', '%Y-%m-%d').date()
+    end_date = datetime.strptime('2016-05-31', '%Y-%m-%d').date()
+    qs = GroupPost.objects.all()
+    qss = QuerySetStats(qs, date_field='created_time')
+    values = qss.time_series(start_date, end_date, interval='days')
+    # for el in qs:
+    #     el.created_time = el.created_time.datetime.astimezone(
+    #         pytz.timezone('Europe/Kiev'))
+    # qss = QuerySetStats(qs, date_field='created_time')
+
     context.update({
         'deposits_amount': deposits_amount,
         'actual_date': actual_date,
@@ -82,12 +106,19 @@ def statistic(request):
         'members_finished_amount': members_finished_amount,
         'members_fail_amount': members_fail_amount,
         'profit': profit,
+        'values': values,
     })
     return render(request, template, context)
 
 
 def test(request):
     """Just test page."""
-    context = {}
-    template = 'runstat/test.html'
-    return render(request, template, context)
+    template_name = 'runstat/test.html'
+    #
+    start_date = datetime.strptime('2016-05-01', '%Y-%m-%d').date()
+    end_date = datetime.strptime('2016-05-31', '%Y-%m-%d').date()
+    qs = GroupPost.objects.all()
+    qss = QuerySetStats(qs, date_field='created_time')
+    values = qss.time_series(start_date, end_date, interval='days')
+
+    return render(request, template_name, {'values': values})
