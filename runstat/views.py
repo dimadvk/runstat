@@ -57,7 +57,9 @@ class AboutPage(TemplateView):
 def statistic(request):
     """Return statistic page."""
     template = 'runstat/statistic.html'
-    context = {}
+    tzkiev = pytz.timezone('Europe/Kiev')
+    start_date = tzkiev.localize(datetime.strptime('2016-05-01', '%Y-%m-%d'))
+    end_date = tzkiev.localize(datetime.strptime('2016-06-01', '%Y-%m-%d'))
     # count of deposits
     deposits_amount = 759
     # datetime of last update
@@ -88,8 +90,8 @@ def statistic(request):
     # start_date = tzkiev.localize(start_date)
     # end_date = datetime.strptime('2016-05-31', '%Y-%m-%d')
     # end_date = tzkiev.localize(end_date)
-    start_date = datetime.strptime('2016-05-01', '%Y-%m-%d').date()
-    end_date = datetime.strptime('2016-05-31', '%Y-%m-%d').date()
+    # start_date = datetime.strptime('2016-05-01', '%Y-%m-%d').date()
+    # end_date = datetime.strptime('2016-06-01', '%Y-%m-%d').date()
     qs = GroupPost.objects.all()
     qss = QuerySetStats(qs, date_field='created_time')
     values = qss.time_series(start_date, end_date, interval='days')
@@ -97,8 +99,9 @@ def statistic(request):
     #     el.created_time = el.created_time.datetime.astimezone(
     #         pytz.timezone('Europe/Kiev'))
     # qss = QuerySetStats(qs, date_field='created_time')
+    values = GroupPost.objects.filter(created_time__range=(start_date, end_date)).extra({'date_created': 'date(convert_tz(created_time, "GMT", "Europe/Kiev"))'}).values('date_created').annotate(posts_count=Count('object_id')).order_by('date_created')
 
-    context.update({
+    context = {
         'deposits_amount': deposits_amount,
         'actual_date': actual_date,
         'onlookers_amount': onlookers_amount,
@@ -107,7 +110,7 @@ def statistic(request):
         'members_fail_amount': members_fail_amount,
         'profit': profit,
         'values': values,
-    })
+    }
     return render(request, template, context)
 
 

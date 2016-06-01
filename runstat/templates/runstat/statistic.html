@@ -99,7 +99,7 @@ $(function () {
             color: 'rgba(45, 70, 123, 0.60)',
             data: [
                 {% for row in values %}
-                ['{{row.0|date:"d"}}', {{row.1}}],
+                ['{{row.date_created|date:"d"}}', {{row.posts_count}}],
                 {% endfor %}
             ],
             dataLabels: {
