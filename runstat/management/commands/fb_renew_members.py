@@ -77,7 +77,6 @@ class Command(BaseCommand):
 
         return members_list
 
-
     def handle(self, *args, **options):
         """Renew group members list in database."""
         # get group members from fb
@@ -109,11 +108,11 @@ class Command(BaseCommand):
             GroupMember.objects.create(
                 object_id=member['id'],
                 name=member['name'],
-                administrator=member['administrator'],
+                # administrator=member['administrator'],
             )
         # update info of members (may be some change a name or "administrator")
         for member in members_fb:
             GroupMember.objects.filter(object_id=member['id']).update(
                 name=member['name'],
-                administrator=member['administrator'],
+                # administrator=member['administrator'],
             )
