@@ -97,40 +97,4 @@ $(function () {
 {% endblock extra_js %}
 
 
-
-
-
-{%  comment %}
-{% load googlecharts %}
-
-<div id="runs_per_day_graph" align="center"></div>
-{% googlecharts %}
-    {% data values "count" %}
-        {% col "string" "Date" %}"{{ val|date:"d" }}"{% endcol %}
-        {% col "number" "Count of runs" %}{{ val }}{% endcol %}
-    {% enddata %}
-
-    {% options %}
-        kind: "ColumnChart",
-        options: {
-            title: 'Розподіл кількості пробіжок по дням',
-            titlePosition: 'out',
-            backgroundColor: "#ffffff",
-            colors: ["#CBD2E1"],
-            gridlineColor: "#ddd",
-            legend: "none",
-            vAxis: {minValue: 0},
-            chartArea: {left: 60, top: 60, width: 900, height: 200},
-            width: 1000,
-            height: 300,
-            dataOpacity: 0.7,
-            hAxis: {title: 'Дні травня', textStyle: {fontSize: 12,}},
-            vAxis: {title: 'Кількість пробіжок', textStyle: {fontSize: 12,}},
-        }
-    {% endoptions %}
-
-    {% graph "runs_per_day_graph" "count" %} {# используем опции по умолчанию #}
-{% endgooglecharts %}
-{% endcomment %}
-
 {% endblock %}

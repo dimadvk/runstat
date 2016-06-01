@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'runstat',
     'el_pagination',
-    'googlecharts',
 ]
 
 MIDDLEWARE_CLASSES = [
