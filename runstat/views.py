@@ -69,8 +69,9 @@ def statistic(request):
     # count of all members
     members_amount = GroupMember.objects.all().count()
     # count of members who got finished
-    members_finished_amount = GroupMember.objects.all().annotate(
-        posts_count=Count('grouppost')).filter(posts_count__gte=12).count()
+    members_finished_amount = GroupPost.objects.filter(
+        created_time__range=(start_date, end_date)).values('author').annotate(
+            posts_count=Count('author')).filter(posts_count__gte=12).count()
     # count members who got out of race
     members_fail_amount = deposits_amount - members_finished_amount
     # approximate money profit
