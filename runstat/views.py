@@ -3,7 +3,7 @@ from qsstats import QuerySetStats
 from datetime import datetime
 import pytz
 
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
@@ -83,7 +83,7 @@ def statistic(request):
     # day time of runs
     # count of posts per day
     # {'date_created': datetime.date(2016, 5, 28), 'posts_count': 328}
-    # posts_per_day = GroupPost.objects.all().extra({
+    # runs_per_day = GroupPost.objects.all().extra({
     #    'date_created': 'date(convert_tz(created_time, "GMT", "Europe/Kiev"))'
     #    }).values('date_created').annotate(posts_count=Count('object_id'))
     # tzkiev = pytz.timezone('Europe/Kiev')
@@ -93,14 +93,25 @@ def statistic(request):
     # end_date = tzkiev.localize(end_date)
     # start_date = datetime.strptime('2016-05-01', '%Y-%m-%d').date()
     # end_date = datetime.strptime('2016-06-01', '%Y-%m-%d').date()
-    qs = GroupPost.objects.all()
-    qss = QuerySetStats(qs, date_field='created_time')
-    values = qss.time_series(start_date, end_date, interval='days')
+    # qs = GroupPost.objects.all()
+    # qss = QuerySetStats(qs, date_field='created_time')
+    # values = qss.time_series(start_date, end_date, interval='days')
     # for el in qs:
     #     el.created_time = el.created_time.datetime.astimezone(
     #         pytz.timezone('Europe/Kiev'))
     # qss = QuerySetStats(qs, date_field='created_time')
-    values = GroupPost.objects.filter(created_time__range=(start_date, end_date)).extra({'date_created': 'date(convert_tz(created_time, "GMT", "Europe/Kiev"))'}).values('date_created').annotate(posts_count=Count('object_id')).order_by('date_created')
+    runs_per_day = GroupPost.objects.filter(
+        created_time__range=(start_date, end_date)
+        ).extra({'date_created':
+             'date(convert_tz(created_time, "GMT", "Europe/Kiev"))'}
+            ).values('date_created').annotate(
+                posts_count=Count('object_id')).order_by('date_created')
+    runs_per_hour = GroupPost.objects.filter(
+        created_time__range=(start_date, end_date)
+        ).extra({'hour_created':
+                 'hour(convert_tz(created_time, "GMT", "Europe/Kiev"))'}
+                ).values('hour_created').annotate(
+                    posts_count=Count('object_id')).order_by('hour_created')
 
     context = {
         'deposits_amount': deposits_amount,
@@ -110,7 +121,8 @@ def statistic(request):
         'members_finished_amount': members_finished_amount,
         'members_fail_amount': members_fail_amount,
         'profit': profit,
-        'values': values,
+        'runs_per_day': runs_per_day,
+        'runs_per_hour': runs_per_hour,
     }
     return render(request, template, context)
 

@@ -37,17 +37,12 @@
                 <div id="chart_runs_per_hour">-- Тут має бути графік --</div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div id="chart_age">-- Тут має бути графік --</div>
-            </div>
-        </div>
-
     </div>
 </div>
 
 {% block extra_js %}
 <script>
+// runs_per_day
 $(function () {
     $('#chart_runs_per_day').highcharts({
         chart: {
@@ -98,8 +93,80 @@ $(function () {
             name: 'Пробіжки',
             color: 'rgba(45, 70, 123, 0.60)',
             data: [
-                {% for row in values %}
+                {% for row in runs_per_day %}
                 ['{{row.date_created|date:"d"}}', {{row.posts_count}}],
+                {% endfor %}
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.0f}', // without decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Verdana, sans-serif',
+                    fontWeight: 600,
+                }
+            }
+        }]
+    });
+});
+
+// runs_per_hour
+$(function () {
+    $('#chart_runs_per_hour').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Розподіл кількості пробіжок по годинам'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category',
+            title: {
+                text: 'Година',
+                style: {
+                    fontSize: '15px'
+                }
+            },
+            labels: {
+                // rotation: -45,
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Кількість пробіжок',
+                style: {
+                    fontSize: '15px'
+                }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            // formatter: function() {
+            //     return 'День: <b>' + this.x + '</b><br> Пробіжок: <b>' + this.y + '</b> ';
+            // },
+            headerFormat: 'Година: <b>{point.key}</b><br>',
+            pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+        },
+        series: [{
+            name: 'Пробіжки',
+            color: 'rgba(45, 70, 123, 0.60)',
+            data: [
+                {% for row in runs_per_hour %}
+                ['{{row.hour_created}}', {{row.posts_count}}],
                 {% endfor %}
             ],
             dataLabels: {
