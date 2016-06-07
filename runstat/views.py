@@ -61,7 +61,7 @@ def statistic(request):
     start_date = tzkiev.localize(datetime.strptime('2016-05-01', '%Y-%m-%d'))
     end_date = tzkiev.localize(datetime.strptime('2016-06-01', '%Y-%m-%d'))
     # count of deposits
-    deposits_amount = 759
+    deposits_amount = 77012
     # datetime of last update
     actual_date = GroupPost.objects.order_by(
         'updated_time').values('updated_time').last()
@@ -73,7 +73,7 @@ def statistic(request):
         created_time__range=(start_date, end_date)).values('author').annotate(
             posts_count=Count('author')).filter(posts_count__gte=12).count()
     # count members who got out of race
-    members_fail_amount = deposits_amount - members_finished_amount
+    members_fail_amount = deposits_amount/100 - members_finished_amount
     # approximate money profit
     profit = members_fail_amount*100/members_finished_amount
     # count of members who join the group but didn't run
