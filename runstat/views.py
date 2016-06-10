@@ -14,6 +14,9 @@ from .models import GroupMember, GroupPost, MemberTag
 def group_members(request):
     """Group Members list."""
     context = {}
+    #tzkiev = pytz.timezone('Europe/Kiev')
+    #start_date = tzkiev.localize(datetime.strptime('2016-05-01', '%Y-%m-%d'))
+    #end_date = tzkiev.localize(datetime.strptime('2016-06-01', '%Y-%m-%d'))
     search_name = request.GET.get('search_name')
     if search_name:
         members = GroupMember.objects.filter(
@@ -35,16 +38,26 @@ def group_members(request):
 def member(request, pk):
     """Return member page including all posts related."""
     context = {}
+    tzkiev = pytz.timezone('Europe/Kiev')
+    start_date = tzkiev.localize(datetime.strptime('2016-05-01', '%Y-%m-%d'))
+    end_date = tzkiev.localize(datetime.strptime('2016-06-01', '%Y-%m-%d'))
     # get member
     member = get_object_or_404(GroupMember, object_id=pk)
-    context.update({'member': member})
     # get posts of member
     posts = GroupPost.objects.filter(author=pk).order_by('-created_time')
-    context.update({'posts': posts})
+    posts_count_may = GroupPost.objects.filter(
+        author=pk, created_time__range=(start_date, end_date)).count()
     # get tags mentioned in posts
     tags = MemberTag.objects.filter(author_id=pk)
     tags = [x.tag for x in tags]
-    context.update({'tags': tags})
+    context.update({'posts': posts})
+    context.update({'member': member})
+    context.update({
+        'tags': tags,
+        'posts': posts,
+        'member': member,
+        'posts_count_may': posts_count_may,
+    })
     return render(request, 'runstat/member.html', context)
 
 
