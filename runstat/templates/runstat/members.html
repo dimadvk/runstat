@@ -10,10 +10,14 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-xs-12 search-form">
+    <div class="col-xs-4 search-form">
         <form mehod="get">
-            <input type="text" maxlength="50" size="30" name="search_name" value="{{request.GET.search_name}}" placeholder="Ім’я/Прізвище">
-            <input type="submit" value="Пошук">
+            <div class="input-group">
+                <input required="required" class="form-control" type="text" maxlength="50" size="30" name="search_name" value="{{request.GET.search_name}}" placeholder="Ім’я/Прізвище">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Пошук</button>
+                </span>
+            </div>
         </form>
     </div>
 </div>
